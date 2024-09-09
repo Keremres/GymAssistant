@@ -27,9 +27,8 @@ struct SearchDetailView: View {
                     Button("Cancel", role: .cancel, action: {})
                     Button("Use Program", action: {
                         Task{
-                            try await searchViewModel.useProgram(user: mainTabViewModel.user,program: program)
+                            try await searchViewModel.useProgram(user: mainTabViewModel.user,program: program, homeViewModel: homeViewModel)
                             mainTabViewModel.newUser()
-                            homeViewModel.program = program
                             dismiss()
                         }
                     })

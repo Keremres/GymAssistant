@@ -40,7 +40,8 @@ final class SearchViewModel: ObservableObject{
         }
     }
     
-    func useProgram(user: User, program: Program) async throws {
+    @MainActor
+    func useProgram(user: User, program: Program, homeViewModel: HomeViewModel) async throws {
         var programSetDate = program
         programSetDate.week[0].date = Date()
         for (dayIndex, day) in programSetDate.week[0].day.enumerated(){
@@ -51,6 +52,7 @@ final class SearchViewModel: ObservableObject{
         do{
             guard let encodedProgram = try? Firestore.Encoder().encode(programSetDate) else { return }
             try await Firestore.firestore().collection("users").document(user.id).collection("program").document(program.id).setData(encodedProgram)
+            homeViewModel.program = programSetDate
             var userUpdate = user
             userUpdate.programId = program.id
             guard let encodedUser = try? Firestore.Encoder().encode(userUpdate) else { return }
