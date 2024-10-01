@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PersonView: View {
-    @EnvironmentObject var homeViewModel: HomeViewModel
+    @EnvironmentObject var programService: ProgramService
     @EnvironmentObject var mainTabViewModel: MainTabViewModel
     @StateObject var viewModel = PersonViewModel()
     @State var programOut = false
@@ -55,8 +55,6 @@ struct PersonView: View {
                             Button("Program out", role: .destructive, action: {
                                 Task{
                                     try await viewModel.programOut(user: mainTabViewModel.user)
-                                    mainTabViewModel.newUser()
-                                    homeViewModel.program = nil
                                 }
                             })
                         } message: {
@@ -75,9 +73,7 @@ struct PersonView: View {
                 }.alert("Sign out", isPresented: $signOut){
                     Button("Cancel", role: .cancel, action: {})
                     Button("Sign out", role: .destructive, action: {
-                        Task{
-                            await viewModel.signOut()
-                        }
+                            viewModel.signOut()
                     })
                 } message: {
                     Text("You are about to exit. Do you want to Sign out?")
@@ -90,7 +86,7 @@ struct PersonView: View {
 #Preview {
     NavigationStack{
         PersonView()
-            .environmentObject(HomeViewModel())
+            .environmentObject(ProgramService())
             .environmentObject(MainTabViewModel(user: User.MOCK_USER))
     }
 }

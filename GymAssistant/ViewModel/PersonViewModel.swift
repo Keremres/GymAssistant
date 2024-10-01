@@ -8,13 +8,16 @@
 import Foundation
 import Firebase
 
+@MainActor
 final class PersonViewModel: ObservableObject{
-    @Published var error: Bool = false
-    @Published var errorTitle: String = ""
-    @Published var errorMessage: String = ""
     
-    func signOut() async {
-        await AuthService.shared.signout()
+    private let programService = ProgramService.shared
+    private let mainTabViewModel = MainTabViewModel.shared
+    
+    @Published var alert: CustomError? = nil
+
+    func signOut(){
+        AuthService.shared.signout()
     }
     
     func programOut(user: User) async throws {
@@ -24,18 +27,14 @@ final class PersonViewModel: ObservableObject{
                 userUpdate.programId = ""
                 guard let encodedUser = try? Firestore.Encoder().encode(userUpdate) else { return }
                 try await Firestore.firestore().collection("users").document(user.id).updateData(encodedUser)
+                programService.program = nil
                 try await AuthService.shared.loadUserData()
+                mainTabViewModel?.newUser()
             }catch let error as AppAuthError{
-                errorTitle = "Error"
-                errorMessage = error.localizedDescription
-                self.error = true
-                print(error.localizedDescription)
+                alert = .authError(appAuthError: error)
             }catch{
-                errorTitle = "Error"
-                self.error = true
-                print(error.localizedDescription)
+                alert = CustomError.customError(title: "Program Out Error", subtitle: "Sorry try again")
             }
         }
-        
     }
 }

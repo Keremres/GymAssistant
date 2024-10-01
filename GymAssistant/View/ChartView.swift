@@ -10,15 +10,15 @@ import Charts
 
 struct ChartView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var homeViewModel: HomeViewModel
+    @EnvironmentObject var programService: ProgramService
     @State var exercise: Exercises
     @State private var rawSelectedDate: Date? = nil
     
     var body: some View {
         NavigationStack{
             Chart{
-                ForEach(homeViewModel.chartCalculator(exerciseId: exercise.id), id: \.self) { chartData in
-                    if (homeViewModel.program?.week.count != 1){
+                ForEach(programService.chartCalculator(exerciseId: exercise.id), id: \.self) { chartData in
+                    if (programService.program?.week.count != 1){
                         LineMark(
                             x: .value("Date", chartData.date, unit: .day),
                             y: .value("Weight", chartData.value)
@@ -66,7 +66,7 @@ struct ChartView: View {
     @ViewBuilder
     var selectionPopover: some View{
         if let rawSelectedDate,
-           let selectedData = homeViewModel.chartCalculator(exerciseId: exercise.id).first(where: { Calendar.current.isDate($0.date, inSameDayAs: rawSelectedDate) }) {
+           let selectedData = programService.chartCalculator(exerciseId: exercise.id).first(where: { Calendar.current.isDate($0.date, inSameDayAs: rawSelectedDate) }) {
             VStack {
                 Text("Date: \(selectedData.date.formatted())")
                 Text("Weight: \(selectedData.value, specifier: "%.2f") kg")
@@ -83,6 +83,6 @@ struct ChartView: View {
 #Preview {
     NavigationStack{
         ChartView(exercise: DayModel.MOCK_DAY[0].exercises[0])
-            .environmentObject(HomeViewModel())
+            .environmentObject(ProgramService())
     }
 }

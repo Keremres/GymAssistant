@@ -23,13 +23,8 @@ struct SearchView: View {
                     }
                 }
             }.searchable(text: $text, prompt: "arama...")
-        }.alert(viewModel.errorTitle, isPresented: $viewModel.error){
-            Button("Cancel", role: .cancel, action: {
-                viewModel.errorClear()
-            })
-        }message: {
-            Text(viewModel.errorMessage)
         }
+        .showAlert(alert: $viewModel.alert)
     }
 }
 

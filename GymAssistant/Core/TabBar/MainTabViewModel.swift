@@ -8,11 +8,15 @@
 import Foundation
 
 final class MainTabViewModel: ObservableObject{
+    
+    static var shared: MainTabViewModel?
+    
     @Published var user: User
     
     @MainActor
     init(user: User) {
         self.user = user
+        MainTabViewModel.shared = self
         newUser()
     }
     

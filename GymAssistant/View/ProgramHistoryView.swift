@@ -58,11 +58,7 @@ struct ProgramHistoryView: View {
                     }
             }
         }
-        .alert(viewModel.errorTitle, isPresented: $viewModel.error) {
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text(viewModel.errorMessage)
-        }
+        .showAlert(alert: $viewModel.alert)
     }
 }
 

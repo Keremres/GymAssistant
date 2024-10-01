@@ -13,7 +13,6 @@ struct CreateView: View {
     @StateObject var viewModel = CreateViewModel()
     @State var alert = false
     @State var sheet = false
-    @EnvironmentObject var homeViewModel: HomeViewModel
     @EnvironmentObject var mainTabViewModel: MainTabViewModel
     var body: some View {
         NavigationStack{
@@ -53,8 +52,6 @@ struct CreateView: View {
                                 Button("Save", action: {
                                     Task{
                                         try await viewModel.create(user: mainTabViewModel.user)
-                                        mainTabViewModel.newUser()
-                                        homeViewModel.program = viewModel.program
                                         dismiss()
                                     }
                                 })
@@ -103,7 +100,6 @@ struct CreateView: View {
 #Preview {
     NavigationStack{
         CreateView()
-            .environmentObject(HomeViewModel())
             .environmentObject(MainTabViewModel(user: User.MOCK_USER))
     }
 }

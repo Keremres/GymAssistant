@@ -22,13 +22,7 @@ struct RegisterView: View {
                         try await viewModel.createUser()
                     }
                 }, title: RegisterText.signUp).padding(Edge.Set.top,16)
-                    .alert(viewModel.errorTitle, isPresented: $viewModel.error){
-                        Button("Cancel", role: .cancel, action: {
-                            viewModel.errorClear()
-                        })
-                    }message: {
-                        Text(viewModel.errorMessage)
-                    }
+                    .showAlert(alert: $viewModel.alert)
                 
             }.padding(16)
         }.toolbar{

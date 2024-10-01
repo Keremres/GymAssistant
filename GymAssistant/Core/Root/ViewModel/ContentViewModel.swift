@@ -9,7 +9,7 @@ import Foundation
 import Firebase
 import Combine
 
-class ContentViewModel: ObservableObject {
+final class ContentViewModel: ObservableObject {
     
     static let contentViewModel = ContentViewModel()
     

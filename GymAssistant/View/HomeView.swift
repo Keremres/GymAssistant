@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    @EnvironmentObject var programService: ProgramService
     @EnvironmentObject var viewModel: HomeViewModel
     @EnvironmentObject var mainTabViewModel: MainTabViewModel
     @Binding var tabBarName: TabBarName
@@ -15,43 +16,45 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack {
-            if viewModel.program != nil {
+            if programService.program != nil {
                 ScrollView {
                     GroupBox{
-                        HStack{
-                            Spacer()
-                            VStack{
-                                Text("Step")
-                                    .foregroundStyle(.blue)
-                                Text("Goal: 10000 / \(viewModel.healthCardMock[0])")
-                                    .foregroundStyle(.blue)
-                                Text("Calories")
-                                    .foregroundStyle(.red)
-                                    .padding(.top, CGFloat(5))
-                                Text("Goal: 300 / \(viewModel.healthCardMock[1])")
-                                    .foregroundStyle(.red)
+                        if !viewModel.healthCard.isEmpty{
+                            HStack{
+                                Spacer()
+                                VStack{
+                                    Text("Step")
+                                        .foregroundStyle(.blue)
+                                    Text("Goal: 10000 / \(viewModel.healthCard[0])")
+                                        .foregroundStyle(.blue)
+                                    Text("Calories")
+                                        .foregroundStyle(.red)
+                                        .padding(.top, CGFloat(5))
+                                    Text("Goal: 300 / \(viewModel.healthCard[1])")
+                                        .foregroundStyle(.red)
+                                }
+                                .bold()
+                                Spacer(minLength: 0)
+                                ZStack{
+                                    ProgressCircle(progress: $viewModel.healthCard[0], goal: 10000, color: .blue)
+                                    ProgressCircle(progress: $viewModel.healthCard[1], goal: 300, color: .red)
+                                        .padding(.all, CGFloat(10))
+                                }
+                                Spacer()
                             }
-                            .bold()
-                            Spacer(minLength: 0)
-                            ZStack{
-                                ProgressCircle(progress: $viewModel.healthCardMock[0], goal: 10000, color: .blue)
-                                ProgressCircle(progress: $viewModel.healthCardMock[1], goal: 300, color: .red)
-                                    .padding(.all, CGFloat(10))
-                            }
-                            Spacer()
+                            .frame(height: CGFloat(100))
                         }
-                        .frame(height: CGFloat(100))
                     }label: {
                         HStack{
                             Spacer()
-                            Text("\(viewModel.program?.programName ?? "")  \(viewModel.program?.programClass ?? "")")
+                            Text("\(programService.program?.programName ?? "")  \(programService.program?.programClass ?? "")")
                                 .bold()
                                 .foregroundStyle(.pink)
                             Spacer()
                         }
                     }
                     LazyVGrid(columns: [GridItem(.flexible())]){
-                        ForEach(viewModel.program!.week) { week in
+                        ForEach(programService.program!.week) { week in
                             if Date.getCurrentWeekInt(date: week.date) == Date.getCurrentWeekInt(date: Date()) {
                                 ForEach(week.day) { day in
                                     NavigationLink(destination: DetailView(dayModel: day)
@@ -66,6 +69,8 @@ struct HomeView: View {
                 .refreshable {
                     do {
                         try await viewModel.getProgram(user: mainTabViewModel.user)
+                        viewModel.fetchTodaySteps()
+                        viewModel.fetchTodayCalories()
                     } catch {
                         print("Error refreshing program: \(error.localizedDescription)")
                     }
@@ -113,6 +118,7 @@ struct HomeView: View {
         HomeView(tabBarName: .constant(TabBarName.Home))
             .environmentObject(HomeViewModel())
             .environmentObject(MainTabViewModel(user: User.MOCK_USER))
+            .environmentObject(ProgramService())
     }
 }
 

@@ -10,7 +10,6 @@ import SwiftUI
 struct SearchDetailView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var searchViewModel: SearchViewModel
-    @EnvironmentObject var homeViewModel: HomeViewModel
     @EnvironmentObject var mainTabViewModel: MainTabViewModel
     @State var alert = false
     let program: Program
@@ -27,8 +26,7 @@ struct SearchDetailView: View {
                     Button("Cancel", role: .cancel, action: {})
                     Button("Use Program", action: {
                         Task{
-                            try await searchViewModel.useProgram(user: mainTabViewModel.user,program: program, homeViewModel: homeViewModel)
-                            mainTabViewModel.newUser()
+                            try await searchViewModel.useProgram(user: mainTabViewModel.user,program: program)
                             dismiss()
                         }
                     })
@@ -54,7 +52,6 @@ struct SearchDetailView: View {
 #Preview {
     NavigationStack{
         SearchDetailView(searchViewModel: SearchViewModel(), program: Program.MOCK_PROGRAM)
-            .environmentObject(HomeViewModel())
             .environmentObject(MainTabViewModel(user: User.MOCK_USER))
     }
 }

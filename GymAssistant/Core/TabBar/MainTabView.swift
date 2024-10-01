@@ -12,6 +12,7 @@ struct MainTabView: View {
     @State var currentTab : TabBarName = .Home
     @StateObject var viewModel: MainTabViewModel
     @StateObject var homeViewModel = HomeViewModel()
+    @StateObject var programService = ProgramService.shared
     
     init(user: User) {
             _viewModel = StateObject(wrappedValue: MainTabViewModel(user: user))
@@ -27,6 +28,7 @@ struct MainTabView: View {
             }
             .environmentObject(homeViewModel)
             .environmentObject(viewModel)
+            .environmentObject(programService)
             HStack(spacing: 0){
                 TabButton(title: TabBarName.Home, image: TabBarImage.Home, selected: $currentTab)
                 Spacer(minLength: 0)

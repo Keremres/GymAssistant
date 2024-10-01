@@ -29,14 +29,9 @@ struct LoginView: View {
                     Task{
                         try await viewModel.signIn()
                     }
-                }, title: LoginText.Login).padding(Edge.Set.top,8)
-                    .alert(viewModel.errorTitle, isPresented: $viewModel.error){
-                        Button("Cancel", role: .cancel, action: {
-                            viewModel.errorClear()
-                        })
-                    }message: {
-                        Text(viewModel.errorMessage)
-                    }
+                }, title: LoginText.Login)
+                .padding(Edge.Set.top,8)
+                .showAlert(alert: $viewModel.alert)
                 
                 HStack{
                     Text("Don't have an account? ").padding(Edge.Set.top,16).foregroundStyle(.loginText)

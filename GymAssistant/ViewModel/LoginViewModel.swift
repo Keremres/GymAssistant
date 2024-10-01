@@ -7,91 +7,89 @@
 
 import Foundation
 
+@MainActor
 final class LoginViewModel: ObservableObject {
     @Published var email: String = ""
     @Published var password: String = ""
     @Published var forgotPassword: String = ""
     
     @Published var showForgotPassword: Bool = false
-    
-    @Published var errorTitle = ""
-    @Published var errorMessage = ""
-    @Published var error: Bool = false
-    
-    @MainActor
-    func signIn() async throws {
-        guard validate() else {
-            return
-        }
         
+    @Published var alert: CustomError? = nil
+    
+    func signIn() async throws {
+        guard validate() else { return }
         do{
             try await AuthService.shared.login(withEmail: email, password: password)
         }catch let error as AppAuthError{
-            errorTitle = "Error"
-            errorMessage = error.localizedDescription
-            self.error = true
-            print(error.localizedDescription)
+            alert = .authError(appAuthError: error)
         }catch{
-            errorTitle = "Error"
-            self.error = true
-            print(error.localizedDescription)
+            alert = CustomError.customError(title: "Login Error", subtitle: "Try again")
         }
     }
     
-    @MainActor
     func resetPassword(email: String) async throws {
         do{
             try await AuthService.shared.resetPassword(email: email)
             showForgotPassword = false
         }catch let error as AppAuthError{
-            errorTitle = "Error"
-            errorMessage = error.localizedDescription
-            self.error = true
-            print(error.localizedDescription)
+            alert = .authError(appAuthError: error)
         }catch{
-            errorTitle = "Error"
-            self.error = true
-            print(error.localizedDescription)
+            alert = CustomError.customError(title: "Reset Error", subtitle: "Try again")
         }
     }
     
-    @MainActor
     func validate() -> Bool {
-        errorClear()
-        
         guard !email.trimmingCharacters(in: .whitespaces).isEmpty else {
-            errorTitle = "Email Error"
-            errorMessage = "Plase enter email"
-            error = true
+            alert = CustomError.customError(title: LoginAlert.enterEmail.title, subtitle: LoginAlert.enterEmail.subtitle)
             return false
         }
         
         guard email.contains("@") && email.contains(".") else {
-            errorTitle = "Email Error"
-            errorMessage = "Plase enter a valid email"
-            error = true
+            alert = CustomError.customError(title: LoginAlert.validEmail.title, subtitle: LoginAlert.validEmail.subtitle)
             return false
         }
         guard !password.trimmingCharacters(in: .whitespaces).isEmpty else {
-            errorTitle = "Password Error"
-            errorMessage = "Plase enter password"
-            error = true
+            alert = CustomError.customError(title: LoginAlert.enterPassword.title, subtitle: LoginAlert.enterPassword.subtitle)
             return false
         }
         guard password.count >= 6 else{
-            errorTitle = "Password Error"
-            errorMessage = "Plase enter a password longer than 6 characters"
-            error = true
+            alert = CustomError.customError(title: LoginAlert.characters.title, subtitle: LoginAlert.characters.subtitle)
             return false
         }
         
         return true
     }
+}
+
+enum LoginAlert{
+    case enterEmail
+    case validEmail
+    case enterPassword
+    case characters
     
-    @MainActor
-    func errorClear(){
-        error = false
-        errorTitle = ""
-        errorMessage = ""
+    var title: String{
+        switch self{
+        case .enterEmail:
+            "Email Error"
+        case .validEmail:
+            "Email Error"
+        case .enterPassword:
+            "Password Error"
+        case .characters:
+            "Password Error"
+        }
+    }
+    var subtitle: String{
+        switch self{
+        case .enterEmail:
+            "Plase enter email"
+        case .validEmail:
+            "Plase enter a valid email"
+        case .enterPassword:
+            "Plase enter password"
+        case .characters:
+            "Plase enter a password longer than 6 characters"
+        }
     }
 }

@@ -23,13 +23,7 @@ struct ForgotPassword: View {
             }, title: "Reset Password")
             .padding(.top, CGFloat(10))
             .disabled(!viewModel.forgotPassword.contains("@") || !viewModel.forgotPassword.contains("."))
-            .alert(viewModel.errorTitle, isPresented: $viewModel.error){
-                Button("Cancel", role: .cancel, action: {
-                    viewModel.errorClear()
-                })
-            }message: {
-                Text(viewModel.errorMessage)
-            }
+            .showAlert(alert: $viewModel.alert)
         }.padding(CGFloat(16))
     }
 }

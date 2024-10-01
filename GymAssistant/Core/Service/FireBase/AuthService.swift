@@ -10,7 +10,7 @@ import FirebaseAuth
 import Firebase
 import FirebaseFirestoreSwift
 
-class AuthService{
+final class AuthService{
     
     @Published var userSession: FirebaseAuth.User?
     @Published var currentUser: User?
@@ -109,14 +109,29 @@ class AuthService{
     }
 }
 
-enum AppAuthError: Error{
+enum AppAuthError: ErrorAlert{
     case emailAlreadyInUse
     case invalidEmail
     case wrongPassword
     case tooManyRequests
     case networkError
     
-    var localizedDescription: String{
+    var title: String{
+        switch self{
+        case .emailAlreadyInUse:
+            "Email Already In Use"
+        case .invalidEmail:
+            "Invalid Email"
+        case .wrongPassword:
+            "Wrong Password"
+        case .tooManyRequests:
+            "Too Many Requests"
+        case .networkError:
+            "Network Error"
+        }
+    }
+    
+    var subtitle: String?{
         switch self {
         case .emailAlreadyInUse:
             "This e-mail address is already in use. Please try again with the correct password."
