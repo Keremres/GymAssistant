@@ -20,11 +20,21 @@ struct TabButton: View {
             }
         }){
             HStack{
-                Image(systemName: image.rawValue).resizable().foregroundStyle(.tabBar).frame(width: 25,height: 25)
+                Image(systemName: image.rawValue)
+                    .resizable()
+                    .foregroundStyle(.tabBar)
+                    .frame(width: 25,height: 25)
                 if selected == title{
-                    Text(title.rawValue).bold().tint(.tabBar)
+                    Text(title.rawValue)
+                        .bold()
+                        .tint(.tabBar)
+                        .lineLimit(1)
                 }
-            }.padding(.horizontal).padding(.vertical,10).background(.tabBar.opacity(selected == title ? 0.3 : 0)).clipShape(Capsule())
+            }
+            .padding(.horizontal)
+            .padding(.vertical,10)
+            .background(.tabBar.opacity(selected == title ? 0.3 : 0))
+            .clipShape(Capsule())
         }
     }
 }

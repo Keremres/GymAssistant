@@ -9,21 +9,6 @@ import Foundation
 
 final class MainTabViewModel: ObservableObject{
     
-    static var shared: MainTabViewModel?
+    @Published var currentTab : TabBarName = .Home
     
-    @Published var user: User
-    
-    @MainActor
-    init(user: User) {
-        self.user = user
-        MainTabViewModel.shared = self
-        newUser()
-    }
-    
-    @MainActor
-    func newUser(){
-        if let newUser = AuthService.shared.currentUser {
-            self.user = newUser
-        }
-    }
 }

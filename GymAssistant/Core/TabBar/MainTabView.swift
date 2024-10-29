@@ -9,38 +9,53 @@ import SwiftUI
 import SwiftData
 
 struct MainTabView: View {
-    @State var currentTab : TabBarName = .Home
-    @StateObject var viewModel: MainTabViewModel
-    @StateObject var homeViewModel = HomeViewModel()
-    @StateObject var programService = ProgramService.shared
-    
-    init(user: User) {
-            _viewModel = StateObject(wrappedValue: MainTabViewModel(user: user))
-        }
+    @EnvironmentObject var authManager: AuthManager
+    @EnvironmentObject var userManager: UserManager
+    @EnvironmentObject var programManager: ProgramManager
+    @StateObject var viewModel = MainTabViewModel()
     
     var body: some View {
-        
         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)){
-            TabView(selection: $currentTab){
-                HomeView(tabBarName: $currentTab).tag(TabBarName.Home).ignoresSafeArea(.all)
-                SearchView().tag(TabBarName.Search).ignoresSafeArea(.all)
-                PersonView().tag(TabBarName.Person).ignoresSafeArea(.all)
+            TabView(selection: $viewModel.currentTab){
+                HomeView(tabBarName: $viewModel.currentTab, programManager: programManager, userManager: userManager)
+                    .tag(TabBarName.Home)
+                    .ignoresSafeArea(.all)
+                SearchView(programManager: programManager, userManager: userManager)
+                    .tag(TabBarName.Search)
+                    .ignoresSafeArea(.all)
+                PersonView(authManager: authManager, userManager: userManager, programManager: programManager)
+                    .tag(TabBarName.Person)
+                    .ignoresSafeArea(.all)
             }
-            .environmentObject(homeViewModel)
-            .environmentObject(viewModel)
-            .environmentObject(programService)
-            HStack(spacing: 0){
-                TabButton(title: TabBarName.Home, image: TabBarImage.Home, selected: $currentTab)
-                Spacer(minLength: 0)
-                TabButton(title: TabBarName.Search, image: TabBarImage.Search, selected: $currentTab)
-                Spacer(minLength: 0)
-                TabButton(title: TabBarName.Person, image: TabBarImage.Person, selected: $currentTab)
-            }.padding(.vertical,5)
-                .padding(.horizontal,UIScreen.main.bounds.width * 0.186)
-        }.navigationBarBackButtonHidden(true)
+            tabButton
+        }
+        .navigationBarBackButtonHidden(true)
     }
 }
 
 #Preview {
-    MainTabView(user: User.MOCK_USER)
+    let authManager = AuthManager(service: FirebaseAuthService())
+    let programManager = ProgramManager(service: FirebaseProgramService())
+    let userManager = UserManager(service: FirebaseUserService(), authManager: authManager)
+    MainTabView()
+        .environmentObject(authManager)
+        .environmentObject(userManager)
+        .environmentObject(programManager)
+}
+
+extension MainTabView {
+    
+    private var tabButton: some View {
+            HStack(spacing: 0){
+                TabButton(title: TabBarName.Home, image: TabBarImage.Home, selected: $viewModel.currentTab)
+                Spacer(minLength: 0)
+                TabButton(title: TabBarName.Search, image: TabBarImage.Search, selected: $viewModel.currentTab)
+                Spacer(minLength: 0)
+                TabButton(title: TabBarName.Person, image: TabBarImage.Person, selected: $viewModel.currentTab)
+            }
+            .padding(.vertical, 5)
+            .padding(.horizontal, 5)
+            .background(Color.tabBarText.clipShape(Capsule()))
+            .frame(width: 250)
+    }
 }

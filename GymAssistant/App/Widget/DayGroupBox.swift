@@ -16,14 +16,20 @@ struct DayGroupBox: View {
                 VStack {
                     if change{
                         ForEach(dayModel.exercises.indices, id: \.self) { index in
-                            Text("\(dayModel.exercises[index].exercise) : \(dayModel.exercises[index].set) x \(dayModel.exercises[index].again) = \( dayModel.exercises[index].weight, specifier: "%.2f")").font(.title3).bold().foregroundColor(.tabBar)
+                            Text("\(dayModel.exercises[index].exercise) : \(dayModel.exercises[index].set) x \(dayModel.exercises[index].again) = \( dayModel.exercises[index].weight, specifier: "%.2f")")
+                                .font(.title3)
+                                .bold()
+                                .foregroundColor(.tabBar)
                             Divider()
                         }
-                    }else{
+                    } else {
                         ForEach(dayModel.exercises.indices, id: \.self) { index in
                             Text("\(dayModel.exercises[index].exercise) : \(dayModel.exercises[index].set) x \(dayModel.exercises[index].againStart)\(dayModel.exercises[index].againEnd > dayModel.exercises[index].againStart ? " - \(dayModel.exercises[index].againEnd)": "")")
                             Divider()
-                        }.font(.title3).bold().foregroundColor(.tabBar)
+                        }
+                        .font(.title3)
+                        .bold()
+                        .foregroundColor(.tabBar)
                     }
                 }
             }

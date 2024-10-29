@@ -23,7 +23,8 @@ struct ProgressCircle: View {
                 .stroke(color, style: StrokeStyle(lineWidth: width, lineCap: .round))
                 .rotationEffect(.degrees(-90))
                 .shadow(radius: 5)
-        }.padding(.all, 5)
+        }
+        .padding(.all, 5)
     }
 }
 

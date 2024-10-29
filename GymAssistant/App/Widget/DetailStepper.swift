@@ -18,7 +18,9 @@ struct DetailStepper: View {
             NavigationLink(destination: ChartView(exercise: exercise)
                 .navigationBarBackButtonHidden(true)
             ){
-                Text("\(exercise.exercise) \(exercise.set) x \(exercise.again) : \(exercise.weight, specifier: "%.2f")").bold().foregroundStyle(.tabBar)
+                Text("\(exercise.exercise) \(exercise.set) x \(exercise.again) : \(exercise.weight, specifier: "%.2f")")
+                    .bold()
+                    .foregroundStyle(.tabBar)
             }
         }
     }

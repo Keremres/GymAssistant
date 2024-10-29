@@ -17,11 +17,13 @@
 <p>2. After logging in, you are welcomed by the home screen. If you do not have an existing program, you will be presented with options to create or select one. The app features three main screens: Home, Search, and Person. On the Search screen, you can browse or use existing programs. On the Person screen, you can log out, review your past programs, log out from the current program, and view your profile.</p>
 <img src="https://github.com/user-attachments/assets/8d6a3b11-6047-4995-a420-7ababd1c07b4" style="width:20%; height:auto;">
 <img src="https://github.com/user-attachments/assets/e603a005-3216-47ee-aff3-e52618650af0" style="width:20%; height:auto;">
-<img src="https://github.com/user-attachments/assets/6a0f2848-1e4c-4cc2-a6a3-a98f5faaa66f" style="width:20%; height:auto;">
+<img src="https://github.com/user-attachments/assets/6a97c59b-78c6-46c8-b8a6-19bdeeabcc24" style="width:20%; height:auto;">
 <br>
 <hr>
 <p>3. By selecting "Create", you can start a new program. Add days to your program using the plus icon at the top right. You can then add exercises to each day using the plus icon at the top right of the day. If the desired exercise is not available, you can create a new one. To delete a day, simply swipe it. On the Search screen, while viewing a selected program, you can choose to start using it.</p>
-<img src="https://github.com/user-attachments/assets/06d811a9-8d50-4dce-8e27-f12b96552ecb" style="width:20%; height:auto;">
+<img src="https://github.com/user-attachments/assets/62468ff7-2f42-481a-b5d5-18a3dfca6d3e" style="width:20%; height:auto;">
+<img src="https://github.com/user-attachments/assets/348bef9a-5868-4e33-91dc-0ea38c520f6c"
+    style="width:20%; height:auto;">
 <img src="https://github.com/user-attachments/assets/f8f01264-554e-4a77-8a67-bd6402a15c3b" style="width:20%; height:auto;">
 <br>
 <hr>
@@ -32,5 +34,5 @@
 <br>
 <hr>
 <p>5. On the Person screen, you can log out, exit the current program, and view your past programs.</p>
-<img src="https://github.com/user-attachments/assets/6a0f2848-1e4c-4cc2-a6a3-a98f5faaa66f" style="width:20%; height:auto;">
+<img src="https://github.com/user-attachments/assets/6a97c59b-78c6-46c8-b8a6-19bdeeabcc24" style="width:20%; height:auto;">
 <img src="https://github.com/user-attachments/assets/a7d82e3d-445b-4a7d-b6da-b02247047a56" style="width:20%; height:auto;">

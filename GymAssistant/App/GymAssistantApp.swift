@@ -20,16 +20,19 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct GymAssistantApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    
-//    init(){
-//        let appearanceTab = UITabBarAppearance()
-//        appearanceTab.configureWithTransparentBackground()
-//        UITabBar.appearance().scrollEdgeAppearance = appearanceTab
-//        UITabBar.appearance().standardAppearance = appearanceTab
-//    }
+    @StateObject var authManager: AuthManager = AuthManager(service: FirebaseAuthService())
+    @StateObject var programManager: ProgramManager = ProgramManager(service: FirebaseProgramService())
+    init(){
+        let appearanceTab = UITabBarAppearance()
+        appearanceTab.configureWithTransparentBackground()
+        UITabBar.appearance().scrollEdgeAppearance = appearanceTab
+        UITabBar.appearance().standardAppearance = appearanceTab
+    }
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(authManager: authManager)
         }
+        .environmentObject(authManager)
+        .environmentObject(programManager)
     }
 }

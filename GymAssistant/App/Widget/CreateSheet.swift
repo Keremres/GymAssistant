@@ -14,7 +14,8 @@ struct CreateSheet: View {
         VStack{
             Text("New Exercise")
                 .font(.largeTitle)
-            BaseTextField(textTitle: "Exercise Name", textField: $exercise.exercise)
+            BaseTextField(textTitle: "Exercise Name",
+                          textField: $exercise.exercise)
             BaseButton(onTab: {
                 Exercises.exerciseList.append(exercise)
                 withAnimation{

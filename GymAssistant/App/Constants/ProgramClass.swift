@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct ProgramClass{
+enum ProgramClass{
     static let programClass: [String] = ["Powerlifting","Hipertrofi"]
 }

@@ -22,7 +22,8 @@ struct ProgramBoxView: View {
                     DayGroupBox(dayModel: day, change: false)
                 }
             }
-        }.frame(height: UIScreen.main.bounds.height * 0.225)
+        }
+        .frame(height: UIScreen.main.bounds.height * 0.225)
     }
 }
 

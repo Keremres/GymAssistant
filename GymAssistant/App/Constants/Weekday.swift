@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct Weekday{
+enum Weekday{
     static let weekday: [String] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 }
