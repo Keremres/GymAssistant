@@ -25,7 +25,6 @@ extension Query {
         }
     
     // Note: similar to DocumentReference.addSnapshotStream
-
     func addSnapshotStream<T: Decodable>(as type: [T].Type, onListenerConfigured: @escaping (ListenerRegistration) -> Void) -> AsyncThrowingStream<[T], Error> {
         var didConfigureListener: Bool = false
         

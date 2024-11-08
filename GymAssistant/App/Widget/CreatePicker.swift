@@ -11,7 +11,7 @@ struct CreatePicker: View {
     @Binding var exercise: Exercises
     @State private var movement = 0
     var body: some View {
-            Picker("Exercise: \(exercise.exercise)", systemImage: "dumbbell.fill", selection: $movement){
+        Picker("Exercise: \(exercise.exercise)", systemImage: SystemImage.dumbbellFill, selection: $movement){
                 ForEach(Exercises.exerciseList.indices, id: \.self){ index in
                     Text(Exercises.exerciseList[index].exercise)
                 }

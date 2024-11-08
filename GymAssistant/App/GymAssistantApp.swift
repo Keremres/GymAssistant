@@ -20,8 +20,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct GymAssistantApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @StateObject var authManager: AuthManager = AuthManager(service: FirebaseAuthService())
-    @StateObject var programManager: ProgramManager = ProgramManager(service: FirebaseProgramService())
+    @StateObject var authManager: AuthManager = AppContainer.shared.authManager
+    @StateObject var userManager: UserManager = AppContainer.shared.userManager
+    @StateObject var programManager: ProgramManager = AppContainer.shared.programManager
     init(){
         let appearanceTab = UITabBarAppearance()
         appearanceTab.configureWithTransparentBackground()
@@ -30,9 +31,10 @@ struct GymAssistantApp: App {
     }
     var body: some Scene {
         WindowGroup {
-            ContentView(authManager: authManager)
+            ContentView()
         }
         .environmentObject(authManager)
         .environmentObject(programManager)
+        .environmentObject(userManager)
     }
 }

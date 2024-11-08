@@ -8,12 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @EnvironmentObject var authManager: AuthManager
-    @StateObject private var viewModel: LoginViewModel
-    
-    init(authManager: AuthManager) {
-        _viewModel = StateObject(wrappedValue: LoginViewModel(authManager: authManager))
-    }
+    @StateObject private var viewModel: LoginViewModel = LoginViewModel()
     
     var body: some View {
         NavigationStack{
@@ -22,7 +17,7 @@ struct LoginView: View {
                               textField: $viewModel.signInModel.email)
                 BaseSecureField(textTitle: LoginText.secureField,
                                 textField: $viewModel.signInModel.password)
-                    .padding(.top, 16)
+                .padding(.top, 16)
                 forgetPasswordButton
                 loginButton
                 signUpButton
@@ -38,9 +33,7 @@ struct LoginView: View {
 }
 
 #Preview {
-    let authManager = AuthManager(service: FirebaseAuthService())
-    LoginView(authManager: authManager)
-        .environmentObject(authManager)
+    LoginView()
 }
 
 extension LoginView {
@@ -56,7 +49,7 @@ extension LoginView {
         HStack{
             Text(LoginText.signUpText)
                 .foregroundStyle(.loginText)
-            NavigationLink(destination: RegisterView(authManager: authManager)
+            NavigationLink(destination: RegisterView()
                 .navigationBarBackButtonHidden(true)
             ){
                 Text(LoginText.signUp)

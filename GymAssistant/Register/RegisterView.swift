@@ -8,12 +8,8 @@
 import SwiftUI
 
 struct RegisterView: View {
-    @StateObject var viewModel: RegisterViewModel
+    @StateObject private var viewModel: RegisterViewModel = RegisterViewModel()
     @Environment(\.dismiss) var dismiss
-    
-    init(authManager: AuthManager) {
-        _viewModel = StateObject(wrappedValue: RegisterViewModel(authManager: authManager))
-    }
     
     var body: some View {
         NavigationStack {
@@ -46,16 +42,15 @@ struct RegisterView: View {
 }
 
 #Preview {
-    let authManager = AuthManager(service: FirebaseAuthService())
     NavigationStack{
-        RegisterView(authManager: authManager)
+        RegisterView()
     }
 }
 
 extension RegisterView {
     
     private var dismissButton: some View {
-        Image(systemName: "chevron.left")
+        Image(systemName: SystemImage.chevronLeft)
             .imageScale(.large)
             .bold()
             .onTapGesture {

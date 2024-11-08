@@ -19,30 +19,10 @@ struct ChartView: View {
             chart
         }
         .navigationTitle("\(exercise.exercise)")
-            .toolbar{
-                ToolbarItem(placement: .topBarLeading) {
-                    Image(systemName: "chevron.left")
-                        .imageScale(.large)
-                        .bold()
-                        .onTapGesture {
-                            dismiss()
-                        }
-                }
+        .toolbar{
+            ToolbarItem(placement: .topBarLeading) {
+                dismissButton
             }
-    }
-    @ViewBuilder
-    var selectionPopover: some View{
-        if let rawSelectedDate,
-           let selectedData = programManager.chartCalculator(exerciseId: exercise.id).first(where: { Calendar.current.isDate($0.date, inSameDayAs: rawSelectedDate) }) {
-            VStack {
-                Text("Date: \(selectedData.date.formatted())")
-                Text("Weight: \(selectedData.value, specifier: "%.2f") kg")
-            }
-            .padding()
-            .foregroundStyle(.tabBar)
-            .background(Color.white)
-            .cornerRadius(8)
-            .shadow(radius: 4)
         }
     }
 }
@@ -50,7 +30,7 @@ struct ChartView: View {
 #Preview {
     NavigationStack{
         ChartView(exercise: DayModel.MOCK_DAY[0].exercises[0])
-            .environmentObject(ProgramManager(service: FirebaseProgramService()))
+            .environmentObject(AppContainer.shared.programManager)
     }
 }
 
@@ -92,5 +72,32 @@ extension ChartView {
         .chartXSelection(value: $rawSelectedDate)
         .frame(height: UIScreen.main.bounds.height * 0.4)
         .padding(16)
+    }
+    
+    @ViewBuilder
+    private var selectionPopover: some View{
+        if let rawSelectedDate,
+           let selectedData = programManager.chartCalculator(exerciseId: exercise.id).first(where: { Calendar.current.isDate($0.date, inSameDayAs: rawSelectedDate) }) {
+            VStack {
+                Text("Date: \(selectedData.date.formatted())")
+                Text("Weight: \(selectedData.value, specifier: "%.2f") kg")
+            }
+            .padding()
+            .foregroundStyle(.tabBar)
+            .background(Color.white)
+            .cornerRadius(8)
+            .shadow(radius: 4)
+        }
+    }
+    
+    private var dismissButton: some View {
+        Image(systemName: SystemImage.chevronLeft)
+            .imageScale(.large)
+            .bold()
+            .onTapGesture {
+                withAnimation{
+                    dismiss()
+                }
+            }
     }
 }

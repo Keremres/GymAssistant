@@ -170,9 +170,9 @@ struct Exercises: Identifiable, Hashable, Codable {
 }
 
 extension Program{
-    static var MOCK_PROGRAM : Program = .init(programName: "3x5",
-                                              programClass: "Powerlifting",
-                                              week: [WeekModel(day: DayModel.MOCK_DAY)])
+    static var MOCK_PROGRAM: Program = .init(programName: "3x5",
+                                             programClass: "Powerlifting",
+                                             week: [WeekModel(day: DayModel.MOCK_DAY)])
     
     static func baseProgram() -> Program {
         return Program(id: UUID().uuidString,
@@ -198,7 +198,7 @@ extension DayModel{
                         exercises: [Exercises.exerciseList[0]])
     }
     
-    static var MOCK_DAY : [DayModel] = [
+    static var MOCK_DAY: [DayModel] = [
         .init(day: "Monday", exercises:
                 .init(arrayLiteral: Exercises(exercise: "Squat", set: 3, againStart: 5, again: 5, againEnd: 0, weight: 70),
                       Exercises(exercise: "Squat Asistanı", set: 3, againStart: 8, again: 8, againEnd: 12, weight: 62),
@@ -206,7 +206,7 @@ extension DayModel{
                       Exercises(exercise: "Bench Press Asistanı", set: 3, againStart: 8, again: 8, againEnd: 12, weight: 22.5),
                       Exercises(exercise: "Pendlay Row", set: 3, againStart: 5, again: 5, againEnd: 0, weight: 90),
                       Exercises(exercise: "Row Asistanı", set: 3, againStart: 8, again: 8, againEnd: 12, weight: 38.5))),
-        .init(id: UUID().uuidString, day: "çarşamba", exercises:
+        .init(id: UUID().uuidString, day: "Wednesday", exercises:
                 .init(arrayLiteral: Exercises(exercise: "Front Squat", set: 3, againStart: 5, again: 5, againEnd: 0, weight: 70),
                       Exercises(exercise: "Squat Asistanı", set: 3, againStart: 8, again: 8, againEnd: 12, weight: 62),
                       Exercises(exercise: "Overhead Press", set: 3, againStart: 5, again: 5, againEnd: 0, weight: 60),
@@ -214,7 +214,7 @@ extension DayModel{
                       Exercises(exercise: "Bench Press Asistanı", set: 3, againStart: 8, again: 8, againEnd: 12, weight: 22.5),
                       Exercises(exercise: "Deadlift", set: 1, againStart: 5, again: 5, againEnd: 0, weight: 90),
                       Exercises(exercise: "Deadlift Asistanı", set: 3, againStart: 5, again: 5, againEnd: 12, weight: 38.5))),
-        .init(id: UUID().uuidString, day: "cuma", exercises:
+        .init(id: UUID().uuidString, day: "Friday", exercises:
                 .init(arrayLiteral: Exercises(exercise: "Squat", set: 3, againStart: 5, again: 5, againEnd: 0, weight: 70),
                       Exercises(exercise: "Squat Asistanı", set: 3, againStart: 8, again: 8, againEnd: 12, weight: 62),
                       Exercises(exercise: "Bench Press", set: 3, againStart: 5, again: 5, againEnd: 0, weight: 60),

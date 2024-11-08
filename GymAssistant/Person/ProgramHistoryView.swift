@@ -9,14 +9,7 @@ import SwiftUI
 
 struct ProgramHistoryView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var userManager: UserManager
-    @EnvironmentObject var programManager: ProgramManager
-    @StateObject var viewModel: ProgramHistoryViewModel
-    
-    init(programManager: ProgramManager, userManager: UserManager) {
-        _viewModel = StateObject(wrappedValue: ProgramHistoryViewModel(programManager: programManager,
-                                                                       userManager: userManager))
-    }
+    @StateObject var viewModel: ProgramHistoryViewModel = ProgramHistoryViewModel()
     
     var body: some View {
         NavigationStack {
@@ -28,12 +21,7 @@ struct ProgramHistoryView: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Image(systemName: "chevron.left")
-                    .imageScale(.large)
-                    .bold()
-                    .onTapGesture {
-                        dismiss()
-                    }
+                dismissButton
             }
         }
         .showAlert(alert: $viewModel.alert)
@@ -41,13 +29,8 @@ struct ProgramHistoryView: View {
 }
 
 #Preview {
-    let authManager = AuthManager(service: FirebaseAuthService())
-    let programManager = ProgramManager(service: FirebaseProgramService())
-    let userManager = UserManager(service: FirebaseUserService(), authManager: authManager)
     NavigationStack{
-        ProgramHistoryView(programManager: programManager, userManager: userManager)
-            .environmentObject(userManager)
-            .environmentObject(programManager)
+        ProgramHistoryView()
     }
 }
 
@@ -62,7 +45,7 @@ extension ProgramHistoryView {
                                 await viewModel.programDelete(program: program)
                             }
                         } label: {
-                            Label("Delete", systemImage: "trash")
+                            Label("Delete", systemImage: SystemImage.trash)
                                 .symbolVariant(.fill)
                         }
                     }
@@ -74,11 +57,22 @@ extension ProgramHistoryView {
     private var emptyHistory: some View {
         ContentUnavailableView(
             label: {
-                Label("No Program History Found", systemImage: "tray.fill")
+                Label("No Program History Found", systemImage: SystemImage.trayFill)
             },
             description: {
                 Text("You don't have any program history")
             }
         )
+    }
+    
+    private var dismissButton: some View {
+        Image(systemName: SystemImage.chevronLeft)
+            .imageScale(.large)
+            .bold()
+            .onTapGesture {
+                withAnimation{
+                    dismiss()
+                }
+            }
     }
 }

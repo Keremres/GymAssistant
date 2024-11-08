@@ -9,15 +9,7 @@ import SwiftUI
 
 struct CreateView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var programManager: ProgramManager
-    @EnvironmentObject var userManager: UserManager
-    @StateObject var viewModel: CreateViewModel
-    @State var alert = false
-    
-    init(programManager: ProgramManager, userManager: UserManager) {
-        _viewModel = StateObject(wrappedValue: CreateViewModel(programManager: programManager,
-                                                               userManager: userManager))
-    }
+    @StateObject var viewModel: CreateViewModel = CreateViewModel()
     
     var body: some View {
         NavigationStack{
@@ -28,56 +20,37 @@ struct CreateView: View {
             }
             .listStyle(PlainListStyle())
         }
-        .navigationTitle("Create new program")
+        .navigationTitle(CreateText.createTitle)
         .toolbar{
             ToolbarItem(placement: .topBarLeading) {
-                Image(systemName: "chevron.left")
-                    .imageScale(.large)
-                    .bold()
-                    .onTapGesture {
-                        withAnimation{
-                            dismiss()
-                        }
-                    }
+                dismissButton
             }
             ToolbarItem(placement: .topBarTrailing){
-                Image(systemName: "plus")
-                    .imageScale(.large)
-                    .bold()
-                    .onTapGesture {
-                        withAnimation(){
-                            viewModel.addDay()
-                        }
-                    }
+                plusButton
             }
         }
     }
 }
 
 #Preview {
-    let authManager = AuthManager(service: FirebaseAuthService())
-    let programManager = ProgramManager(service: FirebaseProgramService())
-    let userManager = UserManager(service: FirebaseUserService(), authManager: authManager)
     NavigationStack{
-        CreateView(programManager: programManager, userManager: userManager)
-            .environmentObject(userManager)
-            .environmentObject(programManager)
+        CreateView()
     }
 }
 
 extension CreateView {
     private var createTopContent: some View {
         Section{
-            BaseTextField(textTitle: "Program name",
+            BaseTextField(textTitle: CreateText.programName,
                           textField: $viewModel.program.programName)
-            Picker("Choose Class: \(viewModel.program.programClass)",
-                   systemImage: "figure.run.square.stack.fill",
+            Picker("\(CreateText.chooseClass): \(viewModel.program.programClass)",
+                   systemImage: SystemImage.figureRunSquareStackFill,
                    selection: $viewModel.program.programClass){
                 ForEach(ProgramClass.programClass, id: \.self){ className in
                     Text(className)
                 }
             }
-            .foregroundStyle(.red)
+                   .foregroundStyle(.red)
         }
     }
     
@@ -95,7 +68,7 @@ extension CreateView {
                                 viewModel.deleteDay(id: viewModel.program.week[0].day[index].id)
                             }
                         } label: {
-                            Label("Delete", systemImage: "trash")
+                            Label(CreateText.delete, systemImage: SystemImage.trash)
                                 .symbolVariant(.fill)
                         }
                     }
@@ -124,30 +97,52 @@ extension CreateView {
         Section{
             HStack{
                 Spacer()
-                Text("Save")
+                Text(DialogText.save)
                     .font(.system(size: 22))
                     .onTapGesture {
-                        alert.toggle()
+                        viewModel.showDialog.toggle()
                     }
-                    .alert("Save", isPresented: $alert){
-                        Button("Cancel", role: .cancel, action: {})
-                        Button("Save", action: {
+                    .confirmationDialog(DialogText.save, isPresented: $viewModel.showDialog, titleVisibility: .visible){
+                        Button(DialogText.cancel, role: .cancel, action: {})
+                        Button(DialogText.save, action: {
                             Task{
                                 await viewModel.create()
                                 dismiss()
                             }
                         })
-                        Button("Publish", action: {
+                        Button(DialogText.publish, action: {
                             Task{
                                 await viewModel.publishProgram()
                                 dismiss()
                             }
                         })
                     } message: {
-                        Text("Are you sure you want to save")
+                        Text(DialogText.areYouSure)
                     }
                 Spacer()
             }
         }
+    }
+    
+    private var dismissButton: some View {
+        Image(systemName: SystemImage.chevronLeft)
+            .imageScale(.large)
+            .bold()
+            .onTapGesture {
+                withAnimation{
+                    dismiss()
+                }
+            }
+    }
+    
+    private var plusButton: some View {
+        Image(systemName: SystemImage.plus)
+            .imageScale(.large)
+            .bold()
+            .onTapGesture {
+                withAnimation(){
+                    viewModel.addDay()
+                }
+            }
     }
 }

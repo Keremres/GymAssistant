@@ -6,20 +6,21 @@
 //
 
 import Foundation
+import Combine
 
 @MainActor
 final class ProgramHistoryViewModel: ObservableObject{
     
-    private let programManager: ProgramManager
-    private var userManager: UserManager
+    private let programManager: ProgramManager = AppContainer.shared.programManager
+    private let userManager: UserManager = AppContainer.shared.userManager
+    
+    private var cancellables: AnyCancellable?
     
     @Published var programHistory: [Program] = []
     
     @Published var alert: CustomError? = nil
     
-    init(programManager: ProgramManager, userManager: UserManager) {
-        self.programManager = programManager
-        self.userManager = userManager
+    init() {
         Task{
             await programHistory()
         }

@@ -12,8 +12,8 @@ import Combine
 final class HomeViewModel: ObservableObject{
     
     private let healthManager = HealthManager.shared
-    private let programManager: ProgramManager
-    private var userManager: UserManager
+    private let programManager: ProgramManager = AppContainer.shared.programManager
+    private let userManager: UserManager = AppContainer.shared.userManager
     
     private var cancellables: AnyCancellable?
     
@@ -25,10 +25,8 @@ final class HomeViewModel: ObservableObject{
     @Published var healthCardMock: [Int] = [ 8527, 256]
     
     @Published var alert: CustomError? = nil
-        
-    init(programManager: ProgramManager, userManager: UserManager){
-        self.programManager = programManager
-        self.userManager = userManager
+    
+    init(){
         Task{
             do{
                 try await healthManager.requestHealthKitAccess()
@@ -62,7 +60,9 @@ final class HomeViewModel: ObservableObject{
     
     func getProgram() async {
         do{
-            guard let userInfo = userManager.userInfo, userInfo.programId != "", userInfo.programId != nil else { return }
+            guard let userInfo = userManager.userInfo, userInfo.programId != "", userInfo.programId != nil else {
+                throw AppAuthError.userNotFound
+            }
             try await programManager.getProgram(userInfo: userInfo)
         } catch {
             handleError(error,

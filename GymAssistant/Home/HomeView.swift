@@ -8,16 +8,9 @@
 import SwiftUI
 
 struct HomeView: View {
-    @StateObject var viewModel: HomeViewModel
     @EnvironmentObject var programManager: ProgramManager
-    @EnvironmentObject var userManager: UserManager
+    @StateObject var viewModel: HomeViewModel = HomeViewModel()
     @Binding var tabBarName: TabBarName
-    
-    init(tabBarName: Binding<TabBarName>, programManager: ProgramManager, userManager: UserManager) {
-        _tabBarName = tabBarName
-        _viewModel = StateObject(wrappedValue: HomeViewModel(programManager: programManager,
-                                                             userManager: userManager))
-    }
     
     var body: some View {
         NavigationStack {
@@ -50,13 +43,9 @@ struct HomeView: View {
 }
 
 #Preview {
-    let authManager = AuthManager(service: FirebaseAuthService())
-    let programManager = ProgramManager(service: FirebaseProgramService())
-    let userManager = UserManager(service: FirebaseUserService(), authManager: authManager)
     NavigationStack{
-        HomeView(tabBarName: .constant(.Home), programManager: programManager, userManager: userManager)
-            .environmentObject(programManager)
-            .environmentObject(userManager)
+        HomeView(tabBarName: .constant(.Home))
+            .environmentObject(AppContainer.shared.programManager)
     }
 }
 
@@ -109,9 +98,7 @@ extension HomeView{
             ForEach(programManager.program!.week) { week in
                 if Date.getCurrentWeekInt(date: week.date) == Date.getCurrentWeekInt(date: Date()) {
                     ForEach(week.day) { day in
-                        NavigationLink(destination: DetailView(dayModel: day,
-                                                               userManager: userManager,
-                                                               programManager: programManager)
+                        NavigationLink(destination: DetailView(dayModel: day)
                             .navigationBarBackButtonHidden(true)) {
                                 DayGroupBox(dayModel: day, change: true)
                             }
@@ -123,11 +110,10 @@ extension HomeView{
     
     private var emptyProgram: some View {
         ContentUnavailableView(label: {
-            Label("No Program Found", systemImage: "tray.fill")
+            Label("No Program Found", systemImage: SystemImage.trayFill)
         }, description: {Text("If you do not have a program, you can create or select a new program.")}, actions: {
             HStack{
-                BaseNavigationLink(destination: CreateView(programManager: programManager,
-                                                           userManager: userManager)
+                BaseNavigationLink(destination: CreateView()
                     .navigationBarBackButtonHidden(true), title: "Create")
                 .padding(.horizontal,5)
                 BaseButton(onTab: {

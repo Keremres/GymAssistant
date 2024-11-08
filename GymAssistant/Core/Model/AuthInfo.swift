@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseAuth
 
-struct AuthInfo: Codable, Sendable, Identifiable, IdentifiableByString{
+struct AuthInfo: Codable, Sendable, Hashable, Identifiable, IdentifiableByString{
     let id: String
     let email: String?
     let photoUrl: String?
@@ -49,7 +49,9 @@ struct AuthInfo: Codable, Sendable, Identifiable, IdentifiableByString{
         self.isAnonymous = isAnonymous
     }
     
-    static let mock: AuthInfo = .init(id: "mock", email: "mock@mock.com", photoUrl: nil, isAnonymous: false)
+    static func authInfoMock() -> AuthInfo {
+        return AuthInfo(id: "mock", email: "mock@mock.com", photoUrl: nil, isAnonymous: false)
+    }
     
     static func mockRegister(id: String = "mock" ,register: Register, photoUrl: String? = nil, isAnonymous: Bool = false) -> AuthInfo {
         return AuthInfo(id: id, email: register.email, photoUrl: photoUrl, isAnonymous: isAnonymous)

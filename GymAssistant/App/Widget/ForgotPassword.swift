@@ -31,5 +31,5 @@ struct ForgotPassword: View {
 }
 
 #Preview {
-    ForgotPassword(viewModel: LoginViewModel(authManager: AuthManager(service: FirebaseAuthService())))
+    ForgotPassword(viewModel: LoginViewModel())
 }

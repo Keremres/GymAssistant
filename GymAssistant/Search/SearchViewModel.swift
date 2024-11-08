@@ -10,16 +10,16 @@ import Foundation
 @MainActor
 final class SearchViewModel: ObservableObject{
     
-    private let programManager: ProgramManager
-    private let userManager: UserManager
+    private let programManager: ProgramManager = AppContainer.shared.programManager
+    private let userManager: UserManager = AppContainer.shared.userManager
     
     @Published var programs: [Program] = []
+    @Published var text: String = ""
     
     @Published var alert: CustomError? = nil
+    @Published var showDialog: Bool = false
     
-    init(programManager: ProgramManager, userManager: UserManager){
-        self.programManager = programManager
-        self.userManager = userManager
+    init(){
         Task{
             await getAllPrograms()
         }

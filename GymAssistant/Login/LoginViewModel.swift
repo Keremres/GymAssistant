@@ -9,22 +9,19 @@ import Foundation
 
 @MainActor
 final class LoginViewModel: ObservableObject {
-    private let authManager: AuthManager
-        
+    
+    private let authManager: AuthManager = AppContainer.shared.authManager
+    
     @Published var signInModel: SignIn = SignIn(email: "",
                                                 password: "")
     @Published var forgotPassword: String = ""
     @Published var showForgotPassword: Bool = false
     @Published var alert: CustomError? = nil
     
-    init(authManager: AuthManager) {
-        self.authManager = authManager
-    }
-    
     func signIn() async {
         do{
             try signInModel.validate()
-            try await authManager.signIn(singIn: signInModel)
+            try await authManager.signIn(signIn: signInModel)
             signInModel.clear()
         } catch {
             handleError(error, title: "Login Error")

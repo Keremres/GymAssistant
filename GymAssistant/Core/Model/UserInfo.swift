@@ -8,7 +8,7 @@
 import Foundation
 import FirebaseAuth
 
-struct UserInfo: Codable, Sendable, Identifiable, IdentifiableByString {
+struct UserInfo: Codable, Sendable, Hashable, Identifiable, IdentifiableByString {
     let id: String
     let email: String?
     let firstName: String?
@@ -104,5 +104,7 @@ struct UserInfo: Codable, Sendable, Identifiable, IdentifiableByString {
         case programId = "program_id"
     }
     
-    static let mock: UserInfo = .init(authInfo: .mock)
+    static func userInfoMock(programId: String? = nil) -> UserInfo {
+        return UserInfo(authInfo: .authInfoMock(), programId: programId)
+    }
 }

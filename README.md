@@ -6,6 +6,8 @@
     <li>Firebase is used for the backend, with asynchronous Firebase operations.</li>
     <li>HealthKit is used to retrieve and display step and calorie data.</li>
     <li>Swift Charts is utilized to track exercise progress throughout the program's duration.</li>
+    <li><strong>Swinject</strong> is used for dependency injection, enhancing modularity and making it easy to share single instances of services across the app, like AuthManager, UserManager, and ProgramManager.</li>
+    <li>Unit testing is implemented for <code>ProgramManager</code>, <code>UserManager</code>, and <code>AuthManager</code>, ensuring reliability and stability across core functionalities.</li>
 </ul>
 <hr>
 <p>1. Upon first launching the GymAssistant app, you are greeted with a login page. If you are a new user, click the "Sign Up" link to navigate to the registration page, where you can create an account and access the app. Alternatively, if you forget your password, you can click "Forgot your password?" on the login page to receive an email with instructions for creating a new password.</p>

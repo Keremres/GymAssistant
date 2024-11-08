@@ -54,6 +54,20 @@ struct Register {
     }
 }
 
+extension Register{
+    static func mockRegister(email: String = "test@example.com",
+                             password: String = "password",
+                             verifyPassword: String = "password",
+                             firstName: String = "FirstName",
+                             lastName: String = "LastName") -> Register{
+        return Register(email: email,
+                        password: password,
+                        verifyPassword: verifyPassword,
+                        firstName: firstName,
+                        lastName: lastName)
+    }
+}
+
 enum RegisterAlert{
     
     case firstName

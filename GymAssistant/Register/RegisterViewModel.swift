@@ -9,7 +9,8 @@ import Foundation
 
 @MainActor
 final class RegisterViewModel: ObservableObject {
-    private let authManager: AuthManager
+    
+    private let authManager: AuthManager = AppContainer.shared.authManager
     
     @Published var register: Register = Register(email: "",
                                                  password: "",
@@ -17,10 +18,6 @@ final class RegisterViewModel: ObservableObject {
                                                  firstName: "",
                                                  lastName: "")
     @Published var alert: CustomError? = nil
-    
-    init(authManager: AuthManager) {
-        self.authManager = authManager
-    }
     
     func createUser() async {
         do{

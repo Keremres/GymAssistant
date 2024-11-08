@@ -9,14 +9,9 @@ import SwiftUI
 import Charts
 
 struct DetailView: View {
-    @StateObject var viewModel: DetailViewModel
+    @StateObject var viewModel: DetailViewModel = DetailViewModel()
     @State var dayModel: DayModel
     @Environment(\.dismiss) var dismiss
-    
-    init(dayModel: DayModel, userManager: UserManager, programManager: ProgramManager) {
-        _viewModel = StateObject(wrappedValue: DetailViewModel(userManager: userManager, programManager: programManager))
-        self.dayModel = dayModel
-    }
     
     var body: some View {
         NavigationStack{
@@ -30,30 +25,34 @@ struct DetailView: View {
                         await viewModel.saveDay(dayModel: dayModel)
                         dismiss()
                     }
-                }, title: "Save")
+                }, title: DialogText.save)
                 .padding(.top, 16)
             }
         }
         .navigationTitle("\(dayModel.day)")
         .toolbar{
             ToolbarItem(placement: .topBarLeading) {
-                Image(systemName: "chevron.left")
-                    .imageScale(.large)
-                    .bold()
-                    .onTapGesture {
-                        dismiss()
-                    }
+                dismissButton
             }
         }
     }
 }
 
 #Preview {
-    let programManager = ProgramManager.init(service: FirebaseProgramService())
-    let userManager = UserManager(service: FirebaseUserService(), authManager: AuthManager(service: FirebaseAuthService()))
     NavigationStack{
-        DetailView(dayModel: DayModel.MOCK_DAY[0],
-                   userManager: userManager,
-                   programManager: programManager)
+        DetailView(dayModel: DayModel.MOCK_DAY[0])
+    }
+}
+
+extension DetailView {
+    private var dismissButton: some View {
+        Image(systemName: SystemImage.chevronLeft)
+            .imageScale(.large)
+            .bold()
+            .onTapGesture {
+                withAnimation{
+                    dismiss()
+                }
+            }
     }
 }

@@ -10,17 +10,13 @@ import Foundation
 @MainActor
 final class CreateViewModel: ObservableObject {
     
-    private let programManager: ProgramManager
-    private let userManager: UserManager
+    private let programManager: ProgramManager = AppContainer.shared.programManager
+    private let userManager: UserManager = AppContainer.shared.userManager
     
     @Published var program: Program = Program.baseProgram()
     
     @Published var alert: CustomError? = nil
-    
-    init(programManager: ProgramManager, userManager: UserManager){
-        self.programManager = programManager
-        self.userManager = userManager
-    }
+    @Published var showDialog: Bool = false
     
     func addDay(){
         checkIfWeekExists()

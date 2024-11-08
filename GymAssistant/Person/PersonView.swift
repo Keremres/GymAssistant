@@ -8,19 +8,8 @@
 import SwiftUI
 
 struct PersonView: View {
-    @EnvironmentObject var programManager: ProgramManager
     @EnvironmentObject var userManager: UserManager
-    @EnvironmentObject var authManager: AuthManager
-    @StateObject var viewModel: PersonViewModel
-    @State var programOut = false
-    @State var signOut = false
-    @State var deleteAccount = false
-    
-    init(authManager: AuthManager, userManager: UserManager, programManager: ProgramManager) {
-        _viewModel = StateObject(wrappedValue: PersonViewModel(authManager: authManager,
-                                                               userManager: userManager,
-                                                               programManager: programManager))
-    }
+    @StateObject var viewModel: PersonViewModel = PersonViewModel()
     
     var body: some View {
         NavigationStack{
@@ -35,14 +24,9 @@ struct PersonView: View {
 }
 
 #Preview {
-    let authManager = AuthManager(service: FirebaseAuthService())
-    let programManager = ProgramManager(service: FirebaseProgramService())
-    let userManager = UserManager(service: FirebaseUserService(), authManager: authManager)
     NavigationStack{
-        PersonView(authManager: authManager, userManager: userManager, programManager: programManager)
-            .environmentObject(userManager)
-            .environmentObject(authManager)
-            .environmentObject(programManager)
+        PersonView()
+            .environmentObject(AppContainer.shared.userManager)
     }
 }
 
@@ -93,27 +77,27 @@ extension PersonView {
     private var programSection: some View {
         Section("Program"){
             NavigationLink {
-                ProgramHistoryView(programManager: programManager, userManager: userManager)
+                ProgramHistoryView()
                     .navigationBarBackButtonHidden(true)
             } label: {
-                Label("Progarm history", systemImage: "clock")
+                Label("Progarm history", systemImage: SystemImage.clock)
                     .foregroundStyle(.tabBar)
             }
             
-            Label("Program out", systemImage: "trash.fill")
+            Label(DialogText.programOut, systemImage: SystemImage.trashFill)
                 .foregroundStyle(.red)
                 .onTapGesture {
-                    programOut.toggle()
+                    viewModel.programOutDialog.toggle()
                 }
-                .alert("Program out", isPresented: $programOut) {
-                    Button("Cancel", role: .cancel, action: {})
-                    Button("Program out", role: .destructive, action: {
+                .confirmationDialog(DialogText.programOut, isPresented: $viewModel.programOutDialog, titleVisibility: .visible){
+                    Button(DialogText.cancel, role: .cancel, action: {})
+                    Button(DialogText.programOut, role: .destructive, action: {
                         Task{
                             await viewModel.programOut()
                         }
                     })
                 } message: {
-                    Text("You are about to exit the program. Are you sure you want to quit?")
+                    Text(DialogText.programOutText)
                 }
         }
     }
@@ -127,43 +111,43 @@ extension PersonView {
     
     private var deleteAccountButton: some View {
         HStack{
-            Image(systemName: "trash.fill")
-            Text("Delete account")
+            Image(systemName: SystemImage.trashFill)
+            Text(DialogText.deleteAccount)
         }
         .font(.system(size: 20))
         .foregroundStyle(.red)
         .onLongPressGesture {
-            deleteAccount.toggle()
+            viewModel.deleteAccountDialog.toggle()
         }
-        .alert("Delete account", isPresented: $deleteAccount){
-            Button("Cancel", role: .cancel, action: {})
-            Button("Delete account", role: .destructive, action: {
+        .confirmationDialog(DialogText.deleteAccount, isPresented: $viewModel.deleteAccountDialog, titleVisibility: .visible){
+            Button(DialogText.cancel, role: .cancel, action: {})
+            Button(DialogText.deleteAccount, role: .destructive, action: {
                 Task{
                     await viewModel.deleteAccount()
                 }
             })
         } message: {
-            Text("Account deletion cannot be undone. Are you sure?")
+            Text(DialogText.deleteAccountText)
         }
     }
     
     private var signOutButton: some View {
         HStack{
-            Image(systemName: "arrow.left.circle.fill")
-            Text("Sign out")
+            Image(systemName: SystemImage.arrowLeftCircleFill)
+            Text(DialogText.signOut)
         }
         .font(.system(size: 20))
         .foregroundStyle(.red)
         .onTapGesture {
-            signOut.toggle()
+            viewModel.signOutDialog.toggle()
         }
-        .alert("Sign out", isPresented: $signOut){
-            Button("Cancel", role: .cancel, action: {})
-            Button("Sign out", role: .destructive, action: {
+        .confirmationDialog(DialogText.signOut, isPresented: $viewModel.signOutDialog, titleVisibility: .visible){
+            Button(DialogText.cancel, role: .cancel, action: {})
+            Button(DialogText.signOut, role: .destructive, action: {
                 viewModel.signOut()
             })
         } message: {
-            Text("You are about to exit. Do you want to Sign out?")
+            Text(DialogText.signOutText)
         }
     }
 }

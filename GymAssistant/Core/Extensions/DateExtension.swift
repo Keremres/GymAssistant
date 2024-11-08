@@ -25,6 +25,12 @@ extension Date{
         return calendar.startOfDay(for: oneMonth)
     }
     
+    static var oneWeekAgo: Date{
+        let calendar = Calendar.current
+        let oneWeek = calendar.date(byAdding: .weekOfYear, value: -1, to: Date()) ?? Date()
+        return calendar.startOfDay(for: oneWeek)
+    }
+    
     static var getCurrentWeekStartDate: Date{
         let calendar = Calendar.current
         let currentDate = Date()

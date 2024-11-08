@@ -21,27 +21,13 @@ struct CreateDayExercise: View {
             }
             .listStyle(PlainListStyle())
         }
-        .navigationBarTitle("Create Day Exercise")
+        .navigationBarTitle(CreateText.createDayTitle)
         .toolbar{
             ToolbarItem(placement: .topBarLeading) {
-                Image(systemName: "chevron.left")
-                    .imageScale(.large)
-                    .bold()
-                    .onTapGesture {
-                        withAnimation{
-                            dismiss()
-                        }
-                    }
+                dismissButton
             }
             ToolbarItem(placement: .topBarTrailing){
-                Image(systemName: "plus")
-                    .imageScale(.large)
-                    .bold()
-                    .onTapGesture {
-                        withAnimation{
-                            createViewModel.addExercises(dayModel: createViewModel.program.week[0].day[dayIndex])
-                        }
-                    }
+                plusButton
             }
         }
         .sheet(isPresented: $sheet){
@@ -52,13 +38,9 @@ struct CreateDayExercise: View {
 }
 
 #Preview {
-    let authManager = AuthManager(service: FirebaseAuthService())
-    let userManager = UserManager(service: FirebaseUserService(), authManager: authManager)
-    let programManager = ProgramManager(service: FirebaseProgramService())
     NavigationStack{
         CreateDayExercise(dayIndex: 0)
-            .environmentObject(CreateViewModel(programManager: programManager,
-                                               userManager: userManager))
+            .environmentObject(CreateViewModel())
     }
 }
 
@@ -71,8 +53,8 @@ extension CreateDayExercise {
                         CreatePicker(exercise: $createViewModel.program.week[0].day[dayIndex].exercises[index])
                         Spacer(minLength: 10)
                         HStack{
-                            Image(systemName: "plus.app")
-                            Text("New")
+                            Image(systemName: SystemImage.plusApp)
+                            Text(CreateText.new)
                         }
                         .font(.title3)
                         .foregroundStyle(.red)
@@ -92,7 +74,7 @@ extension CreateDayExercise {
                                                        idDayModel: createViewModel.program.week[0].day[dayIndex].id)
                     }
                 } label: {
-                    Label("Delete", systemImage: "trash")
+                    Label(CreateText.delete, systemImage: SystemImage.trash)
                         .symbolVariant(.fill)
                 }
             }
@@ -100,7 +82,7 @@ extension CreateDayExercise {
     }
     
     private var selectDay: some View {
-        Picker("Choose day: \(createViewModel.program.week[0].day[dayIndex].day)", systemImage: "calendar", selection: $createViewModel.program.week[0].day[dayIndex].day){
+        Picker("\(CreateText.chooseDay): \(createViewModel.program.week[0].day[dayIndex].day)", systemImage: SystemImage.calendar, selection: $createViewModel.program.week[0].day[dayIndex].day){
             ForEach(Weekday.weekday, id: \.self){ day in
                 Text(day)
             }
@@ -110,22 +92,44 @@ extension CreateDayExercise {
     
     private func stepperViews(for exercise: Binding<Exercises>) -> some View {
         VStack {
-            Stepper("Set: \(exercise.set.wrappedValue)",
+            Stepper("\(CreateText.set): \(exercise.set.wrappedValue)",
                     value: exercise.set,
                     in: 0...20,
                     step: 1)
-            Stepper("Repeat: \(exercise.againStart.wrappedValue)",
+            Stepper("\(CreateText.repeatText): \(exercise.againStart.wrappedValue)",
                     value: exercise.againStart,
                     in: 0...20,
                     step: 1)
-            Stepper("Repeat interval: \(exercise.againEnd.wrappedValue)",
+            Stepper("\(CreateText.repeatInterval): \(exercise.againEnd.wrappedValue)",
                     value: exercise.againEnd,
                     in: 0...20,
                     step: 1)
-            Stepper("Weight: \(exercise.weight.wrappedValue, specifier: "%.2f")",
+            Stepper("\(CreateText.weight): \(exercise.weight.wrappedValue, specifier: "%.2f")",
                     value: exercise.weight,
                     in: 0...500,
                     step: 1)
         }
+    }
+    
+    private var dismissButton: some View {
+        Image(systemName: SystemImage.chevronLeft)
+            .imageScale(.large)
+            .bold()
+            .onTapGesture {
+                withAnimation{
+                    dismiss()
+                }
+            }
+    }
+    
+    private var plusButton: some View {
+        Image(systemName: SystemImage.plus)
+            .imageScale(.large)
+            .bold()
+            .onTapGesture {
+                withAnimation(){
+                    createViewModel.addExercises(dayModel: createViewModel.program.week[0].day[dayIndex])
+                }
+            }
     }
 }
