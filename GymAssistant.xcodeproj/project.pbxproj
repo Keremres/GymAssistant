@@ -55,9 +55,6 @@
 		038932412CB97C0A008841D2 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038932402CB97C0A008841D2 /* UserManager.swift */; };
 		038932432CBA6FB9008841D2 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038932422CBA6FB9008841D2 /* UserService.swift */; };
 		038932452CBA7397008841D2 /* FirebaseUserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038932442CBA7397008841D2 /* FirebaseUserService.swift */; };
-		038932B72CBDA791008841D2 /* MockAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038932B62CBDA791008841D2 /* MockAuthService.swift */; };
-		038932B92CBDA7AC008841D2 /* MockUserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038932B82CBDA7AC008841D2 /* MockUserService.swift */; };
-		038932BB2CBDA814008841D2 /* MockProgramService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038932BA2CBDA814008841D2 /* MockProgramService.swift */; };
 		03A052752C80C25200362F5C /* ChartModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A052742C80C25200362F5C /* ChartModel.swift */; };
 		03A0527C2C81122900362F5C /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A0527B2C81122900362F5C /* WidgetKit.framework */; };
 		03A0527E2C81122900362F5C /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03A0527D2C81122900362F5C /* SwiftUI.framework */; };
@@ -65,6 +62,7 @@
 		03A052832C81122900362F5C /* GymAssistantWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A052822C81122900362F5C /* GymAssistantWidget.swift */; };
 		03A052852C81122A00362F5C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03A052842C81122A00362F5C /* Assets.xcassets */; };
 		03A052892C81122A00362F5C /* GymAssistantWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 03A0527A2C81122900362F5C /* GymAssistantWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		03B7BEA12CDE876000368EA2 /* UINavigationController+EXT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B7BEA02CDE876000368EA2 /* UINavigationController+EXT.swift */; };
 		03D8471B2C5E4D270041E99B /* DetailStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D8471A2C5E4D270041E99B /* DetailStepper.swift */; };
 		03D8471D2C5E533E0041E99B /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D8471C2C5E533E0041E99B /* ChartView.swift */; };
 		03D8471F2C5ED0870041E99B /* Weekday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D8471E2C5ED0870041E99B /* Weekday.swift */; };
@@ -168,9 +166,6 @@
 		038932402CB97C0A008841D2 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		038932422CBA6FB9008841D2 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		038932442CBA7397008841D2 /* FirebaseUserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseUserService.swift; sourceTree = "<group>"; };
-		038932B62CBDA791008841D2 /* MockAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAuthService.swift; sourceTree = "<group>"; };
-		038932B82CBDA7AC008841D2 /* MockUserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockUserService.swift; sourceTree = "<group>"; };
-		038932BA2CBDA814008841D2 /* MockProgramService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProgramService.swift; sourceTree = "<group>"; };
 		03A052742C80C25200362F5C /* ChartModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartModel.swift; sourceTree = "<group>"; };
 		03A0527A2C81122900362F5C /* GymAssistantWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GymAssistantWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		03A0527B2C81122900362F5C /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -179,6 +174,7 @@
 		03A052822C81122900362F5C /* GymAssistantWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymAssistantWidget.swift; sourceTree = "<group>"; };
 		03A052842C81122A00362F5C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		03A052862C81122A00362F5C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		03B7BEA02CDE876000368EA2 /* UINavigationController+EXT.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+EXT.swift"; sourceTree = "<group>"; };
 		03D8471A2C5E4D270041E99B /* DetailStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailStepper.swift; sourceTree = "<group>"; };
 		03D8471C2C5E533E0041E99B /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 		03D8471E2C5ED0870041E99B /* Weekday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weekday.swift; sourceTree = "<group>"; };
@@ -199,8 +195,29 @@
 		03FA7D812C557800008A77A7 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		03F14B532CFB550600E63AFA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Auth_Test/MockAuthService.swift,
+				Program_Test/MockProgramService.swift,
+				User_Text/MockUserService.swift,
+			);
+			target = 034462D32C55314C00F588E6 /* GymAssistant */;
+		};
+		03F14B542CFB550600E63AFA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Auth_Test/MockAuthService.swift,
+				Program_Test/MockProgramService.swift,
+				User_Text/MockUserService.swift,
+			);
+			target = 032625C72CDA5DCF00BF5332 /* GymAssistant_Tests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		032625C92CDA5DCF00BF5332 /* GymAssistant_Tests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = GymAssistant_Tests; sourceTree = "<group>"; };
+		032625C92CDA5DCF00BF5332 /* GymAssistant_Tests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (03F14B532CFB550600E63AFA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 03F14B542CFB550600E63AFA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = GymAssistant_Tests; sourceTree = "<group>"; };
 		038931A82CB815AC008841D2 /* TabBar */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = TabBar; sourceTree = "<group>"; };
 		038931AE2CB81602008841D2 /* Login */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Login; sourceTree = "<group>"; };
 		038931B32CB81618008841D2 /* Register */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Register; sourceTree = "<group>"; };
@@ -322,6 +339,7 @@
 				0389319F2CB81570008841D2 /* Query+EXT.swift */,
 				0389319D2CB81568008841D2 /* IdentifiableByString.swift */,
 				03D847262C624BD00041E99B /* DateExtension.swift */,
+				03B7BEA02CDE876000368EA2 /* UINavigationController+EXT.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -446,7 +464,6 @@
 			children = (
 				038931932CB81463008841D2 /* AuthManager.swift */,
 				038931952CB8146D008841D2 /* AuthService.swift */,
-				038932B62CBDA791008841D2 /* MockAuthService.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -464,7 +481,6 @@
 			children = (
 				031F038F2C8F1FAA00670C3C /* FirebaseProgramService.swift */,
 				038931D52CB93E05008841D2 /* ProgramService.swift */,
-				038932BA2CBDA814008841D2 /* MockProgramService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -474,7 +490,6 @@
 			children = (
 				038932402CB97C0A008841D2 /* UserManager.swift */,
 				038932422CBA6FB9008841D2 /* UserService.swift */,
-				038932B82CBDA7AC008841D2 /* MockUserService.swift */,
 			);
 			path = User;
 			sourceTree = "<group>";
@@ -719,6 +734,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03B7BEA12CDE876000368EA2 /* UINavigationController+EXT.swift in Sources */,
 				038931A02CB81570008841D2 /* Query+EXT.swift in Sources */,
 				03FA7D7F2C556E4D008A77A7 /* RegisterText.swift in Sources */,
 				03DE087C2C73DE270037E028 /* CreateSheet.swift in Sources */,
@@ -726,9 +742,7 @@
 				035CFDE52C5AD450001DE1EE /* DayGroupBox.swift in Sources */,
 				032625C32CDA510800BF5332 /* DialogText.swift in Sources */,
 				038932452CBA7397008841D2 /* FirebaseUserService.swift in Sources */,
-				038932B92CBDA7AC008841D2 /* MockUserService.swift in Sources */,
 				038931B92CB8170F008841D2 /* SignIn.swift in Sources */,
-				038932BB2CBDA814008841D2 /* MockProgramService.swift in Sources */,
 				038931D62CB93E05008841D2 /* ProgramService.swift in Sources */,
 				030E0A772C66569E005B0725 /* PersonViewModel.swift in Sources */,
 				034463042C553F7200F588E6 /* TabBarConstants.swift in Sources */,
@@ -774,7 +788,6 @@
 				038932412CB97C0A008841D2 /* UserManager.swift in Sources */,
 				030E0A732C650CDF005B0725 /* DailyStepModel.swift in Sources */,
 				038932432CBA6FB9008841D2 /* UserService.swift in Sources */,
-				038932B72CBDA791008841D2 /* MockAuthService.swift in Sources */,
 				032625C12CDA4E1400BF5332 /* CreateText.swift in Sources */,
 				0357F2902C6BC2A000BAE833 /* ForgotPassword.swift in Sources */,
 				034462D82C55314C00F588E6 /* GymAssistantApp.swift in Sources */,

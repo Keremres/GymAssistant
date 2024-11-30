@@ -8,7 +8,7 @@
 import Foundation
 import Firebase
 
-actor FirebaseUserService: UserService {
+final class FirebaseUserService: UserService {
     
     private let userCollection: CollectionReference = Firestore.firestore().collection(FirebasePath.users)
     

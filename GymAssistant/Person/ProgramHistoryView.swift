@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ProgramHistoryView: View {
-    @Environment(\.dismiss) var dismiss
-    @StateObject var viewModel: ProgramHistoryViewModel = ProgramHistoryViewModel()
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel: ProgramHistoryViewModel = ProgramHistoryViewModel()
     
     var body: some View {
         NavigationStack {
@@ -25,6 +25,9 @@ struct ProgramHistoryView: View {
             }
         }
         .showAlert(alert: $viewModel.alert)
+        .onDisappear {
+            viewModel.cancelTasks()
+        }
     }
 }
 
@@ -41,9 +44,7 @@ extension ProgramHistoryView {
                 ProgramBoxView(program: program)
                     .swipeActions {
                         Button(role: .destructive) {
-                            Task{
-                                await viewModel.programDelete(program: program)
-                            }
+                                viewModel.programDelete(program: program)
                         } label: {
                             Label("Delete", systemImage: SystemImage.trash)
                                 .symbolVariant(.fill)

@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct CreateDayExercise: View {
-    @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var createViewModel: CreateViewModel
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var createViewModel: CreateViewModel
     let dayIndex: Int
-    @State var sheet: Bool = false
+    @State private var sheet: Bool = false
     
     var body: some View {
         NavigationStack{

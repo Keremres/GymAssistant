@@ -9,9 +9,9 @@ import SwiftUI
 import Charts
 
 struct DetailView: View {
-    @StateObject var viewModel: DetailViewModel = DetailViewModel()
+    @StateObject private var viewModel: DetailViewModel = DetailViewModel()
     @State var dayModel: DayModel
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationStack{
@@ -21,10 +21,8 @@ struct DetailView: View {
                 }
                 .padding(.horizontal,16)
                 BaseButton(onTab: {
-                    Task{
-                        await viewModel.saveDay(dayModel: dayModel)
-                        dismiss()
-                    }
+                    viewModel.saveDay(dayModel: dayModel)
+                    dismiss()
                 }, title: DialogText.save)
                 .padding(.top, 16)
             }

@@ -72,9 +72,7 @@ extension LoginView {
     
     private var loginButton: some View {
         BaseButton(onTab: {
-            Task{
-                await viewModel.signIn()
-            }
+            viewModel.signIn()
         }, title: LoginText.login)
         .showAlert(alert: $viewModel.alert)
         .padding(.top, 8)

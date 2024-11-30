@@ -9,8 +9,8 @@ import SwiftUI
 import Charts
 
 struct ChartView: View {
-    @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var programManager: ProgramManager
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var programManager: ProgramManager
     @State var exercise: Exercises
     @State private var rawSelectedDate: Date? = nil
     

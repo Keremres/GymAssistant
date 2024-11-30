@@ -14,12 +14,14 @@ final class DetailViewModel: ObservableObject {
     
     @Published var alert: CustomError? = nil
     
-    func saveDay(dayModel: DayModel) async {
-        do{
-            guard let userInfo = userManager.userInfo else { return }
-            try await programManager.saveDay(userInfo: userInfo, dayModel: dayModel)
-        } catch {
-            handleError(error, title: "Save Day Error", subtitle: "Try again")
+    func saveDay(dayModel: DayModel) {
+        Task{
+            do{
+                guard let userInfo = userManager.userInfo else { return }
+                try await programManager.saveDay(userInfo: userInfo, dayModel: dayModel)
+            } catch {
+                handleError(error, title: "Save Day Error", subtitle: "Try again")
+            }
         }
     }
     

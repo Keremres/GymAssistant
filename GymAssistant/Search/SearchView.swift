@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SearchView: View {
-    @StateObject var viewModel: SearchViewModel = SearchViewModel()
+    @StateObject private var viewModel: SearchViewModel = SearchViewModel()
     
     var body: some View {
         NavigationStack {
@@ -16,6 +16,9 @@ struct SearchView: View {
                 .searchable(text: $viewModel.text, prompt: "Search...")
         }
         .showAlert(alert: $viewModel.alert)
+        .onDisappear {
+            viewModel.cancelTasks()
+        }
     }
 }
 

@@ -16,11 +16,9 @@ struct ForgotPassword: View {
                 .font(.title2)
             BaseTextField(textTitle: " Please enter your email",
                           textField: $viewModel.forgotPassword)
-                .padding(.top, CGFloat(5))
+            .padding(.top, CGFloat(5))
             BaseButton(onTab: {
-                Task{
-                    await viewModel.resetPassword(email: viewModel.forgotPassword)
-                }
+                viewModel.resetPassword(email: viewModel.forgotPassword)
             }, title: "Reset Password")
             .padding(.top, CGFloat(10))
             .disabled(!viewModel.forgotPassword.contains("@") || !viewModel.forgotPassword.contains("."))

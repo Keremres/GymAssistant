@@ -18,22 +18,26 @@ final class LoginViewModel: ObservableObject {
     @Published var showForgotPassword: Bool = false
     @Published var alert: CustomError? = nil
     
-    func signIn() async {
-        do{
-            try signInModel.validate()
-            try await authManager.signIn(signIn: signInModel)
-            signInModel.clear()
-        } catch {
-            handleError(error, title: "Login Error")
+    func signIn() {
+        Task{
+            do{
+                try signInModel.validate()
+                try await authManager.signIn(signIn: signInModel)
+                signInModel.clear()
+            } catch {
+                handleError(error, title: "Login Error")
+            }
         }
     }
     
-    func resetPassword(email: String) async {
-        do{
-            try await authManager.resetPassword(email: email)
-            showForgotPassword = false
-        } catch {
-            handleError(error, title: "Reset Error")
+    func resetPassword(email: String) {
+        Task{
+            do{
+                try await authManager.resetPassword(email: email)
+                showForgotPassword = false
+            } catch {
+                handleError(error, title: "Reset Error")
+            }
         }
     }
     

@@ -58,39 +58,42 @@ final class HomeViewModel: ObservableObject{
         }
     }
     
-    func getProgram() async {
-        do{
-            guard let userInfo = userManager.userInfo, userInfo.programId != "", userInfo.programId != nil else {
-                throw AppAuthError.userNotFound
+    func getProgram() {
+        Task{
+            do{
+                guard let userInfo = userManager.userInfo, userInfo.programId != "", userInfo.programId != nil else {
+                    throw AppAuthError.userNotFound
+                }
+                try await programManager.getProgram(userInfo: userInfo)
+            } catch {
+                handleError(error,
+                            title: HomeAlert.notBeFetched.title,
+                            subtitle: HomeAlert.notBeFetched.subtitle)
             }
-            try await programManager.getProgram(userInfo: userInfo)
-        } catch {
-            handleError(error,
-                        title: HomeAlert.notBeFetched.title,
-                        subtitle: HomeAlert.notBeFetched.subtitle)
         }
     }
     
-    func newWeek() async {
-        do{
-            guard let userInfo = userManager.userInfo else { return }
-            try await programManager.newWeek(userInfo: userInfo)
-        } catch {
-            handleError(error, title: "New Week Error", subtitle: "Try again")
+    func newWeek() {
+        Task{
+            do{
+                guard let userInfo = userManager.userInfo else { return }
+                try await programManager.newWeek(userInfo: userInfo)
+            } catch {
+                handleError(error, title: "New Week Error", subtitle: "Try again")
+            }
         }
     }
     
     private func listentoUserInfo(){
-        cancellables = userManager.$userInfo.sink { [weak self] userInfo in
-            if userInfo != nil {
-                Task{
-                    await self?.getProgram()
-                    await self?.newWeek()
+        cancellables = userManager.$userInfo
+            .sink { [weak self] userInfo in
+                if userInfo != nil {
+                    self?.getProgram()
+                    self?.newWeek()
                     self?.cancellables?.cancel()
                     self?.cancellables = nil
                 }
             }
-        }
     }
     
     private func updateHealthCard(type: HealthDataType, with result: Int) {

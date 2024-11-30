@@ -61,7 +61,7 @@ final class FirebaseProgramService: ProgramService{
         return program
     }
     
-    func saveDay(userInfo: UserInfo, dayModel: DayModel, program: Program) async throws -> Program { //<<<<<<<-------
+    func saveDay(userInfo: UserInfo, dayModel: DayModel, program: Program) async throws -> Program {
         let newProgram: Program = try setDayDate(dayModel: dayModel, program: program)
         try await userProgramCollection(userInfo).updateDocument(document: newProgram)
         return newProgram

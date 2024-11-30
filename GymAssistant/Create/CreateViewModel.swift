@@ -50,26 +50,30 @@ final class CreateViewModel: ObservableObject {
         }
     }
     
-    func create() async {
-        do{
-            guard let userInfo = userManager.userInfo else {
-                throw CustomError.authError(appAuthError: .userNotFound)
+    func create() {
+        Task{
+            do{
+                guard let userInfo = userManager.userInfo else {
+                    throw CustomError.authError(appAuthError: .userNotFound)
+                }
+                try await programManager.useProgram(userInfo: userInfo, program: self.program)
+                try await userManager.userProgramUpdate(programId: self.program.id)
+            } catch {
+                handleError(error,
+                            title: "Create Error",
+                            subtitle: "Try again")
             }
-            try await programManager.useProgram(userInfo: userInfo, program: self.program)
-            try await userManager.userProgramUpdate(programId: self.program.id)
-        } catch {
-            handleError(error,
-                        title: "Create Error",
-                        subtitle: "Try again")
         }
     }
     
-    func publishProgram() async {
-        do{
-            try await programManager.publishProgram(program: self.program)
-        }catch{
-            alert = CustomError.customError(title: "Publish Error",
-                                            subtitle: "Try again")
+    func publishProgram() {
+        Task{
+            do{
+                try await programManager.publishProgram(program: self.program)
+            } catch {
+                alert = CustomError.customError(title: "Publish Error",
+                                                subtitle: "Try again")
+            }
         }
     }
     

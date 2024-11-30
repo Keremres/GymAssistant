@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct PersonView: View {
-    @EnvironmentObject var userManager: UserManager
-    @StateObject var viewModel: PersonViewModel = PersonViewModel()
+    @EnvironmentObject private var userManager: UserManager
+    @StateObject private var viewModel: PersonViewModel = PersonViewModel()
     
     var body: some View {
         NavigationStack{
@@ -92,9 +92,7 @@ extension PersonView {
                 .confirmationDialog(DialogText.programOut, isPresented: $viewModel.programOutDialog, titleVisibility: .visible){
                     Button(DialogText.cancel, role: .cancel, action: {})
                     Button(DialogText.programOut, role: .destructive, action: {
-                        Task{
-                            await viewModel.programOut()
-                        }
+                        viewModel.programOut()
                     })
                 } message: {
                     Text(DialogText.programOutText)
@@ -122,9 +120,7 @@ extension PersonView {
         .confirmationDialog(DialogText.deleteAccount, isPresented: $viewModel.deleteAccountDialog, titleVisibility: .visible){
             Button(DialogText.cancel, role: .cancel, action: {})
             Button(DialogText.deleteAccount, role: .destructive, action: {
-                Task{
-                    await viewModel.deleteAccount()
-                }
+                viewModel.deleteAccount()
             })
         } message: {
             Text(DialogText.deleteAccountText)

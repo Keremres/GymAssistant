@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RegisterView: View {
     @StateObject private var viewModel: RegisterViewModel = RegisterViewModel()
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationStack {
@@ -60,9 +60,7 @@ extension RegisterView {
     
     private var signUpButton: some View {
         BaseButton(onTab:{
-            Task{
-                await viewModel.createUser()
-            }
+            viewModel.createUser()
         }, title: RegisterText.signUp)
         .showAlert(alert: $viewModel.alert)
         .padding(.top, 16)

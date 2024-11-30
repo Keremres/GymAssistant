@@ -19,13 +19,15 @@ final class RegisterViewModel: ObservableObject {
                                                  lastName: "")
     @Published var alert: CustomError? = nil
     
-    func createUser() async {
-        do{
-            try register.validate()
-            try await authManager.signUp(register: register)
-            register.clear()
-        } catch {
-            handleError(error, title: "Register Error")
+    func createUser() {
+        Task{
+            do{
+                try register.validate()
+                try await authManager.signUp(register: register)
+                register.clear()
+            } catch {
+                handleError(error, title: "Register Error")
+            }
         }
     }
     

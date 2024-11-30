@@ -8,7 +8,6 @@
 import Foundation
 import Swinject
 
-@MainActor
 final class AppContainer {
     static let shared = AppContainer()
     private let container = Container()

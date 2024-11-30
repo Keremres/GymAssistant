@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct MainTabView: View {
-    @StateObject var viewModel = MainTabViewModel()
+    @StateObject private var viewModel = MainTabViewModel()
     
     var body: some View {
         ZStack(alignment: Alignment(horizontal: .center, vertical: .bottom)){

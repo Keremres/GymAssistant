@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct HomeView: View {
-    @EnvironmentObject var programManager: ProgramManager
-    @StateObject var viewModel: HomeViewModel = HomeViewModel()
+    @EnvironmentObject private var programManager: ProgramManager
+    @StateObject private var viewModel: HomeViewModel = HomeViewModel()
     @Binding var tabBarName: TabBarName
     
     var body: some View {
@@ -20,7 +20,7 @@ struct HomeView: View {
                     weekDays
                 }
                 .refreshable {
-                    await viewModel.getProgram()
+                    viewModel.getProgram()
                     viewModel.fetchTodaySteps()
                     viewModel.fetchTodayCalories()
                 }
@@ -29,15 +29,13 @@ struct HomeView: View {
                     emptyProgram
                 }
                 .refreshable {
-                    await viewModel.getProgram()
+                    viewModel.getProgram()
                 }
             }
         }
         .showAlert(alert: $viewModel.alert)
         .onAppear{
-            Task{
-                await viewModel.newWeek()
-            }
+            viewModel.newWeek()
         }
     }
 }

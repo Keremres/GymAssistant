@@ -19,32 +19,42 @@ final class SearchViewModel: ObservableObject{
     @Published var alert: CustomError? = nil
     @Published var showDialog: Bool = false
     
+    private var tasks: [Task<Void, Never>] = []
+    
     init(){
-        Task{
-            await getAllPrograms()
-        }
+        getAllPrograms()
     }
     
-    func getAllPrograms() async {
-        do{
-            self.programs = try await programManager.getPrograms()
-        }catch{
-            handleError(error, title: "Error", subtitle: "Sorry try again")
-        }
-    }
-    
-    func useProgram(program: Program) async {
-        let programSetDate = setDate(program: program)
-        do{
-            guard let userInfo = userManager.userInfo else {
-                throw AppAuthError.userNotFound
+    func getAllPrograms() {
+        let task = Task{
+            do{
+                self.programs = try await programManager.getPrograms()
+            } catch {
+                handleError(error, title: "Error", subtitle: "Sorry try again")
             }
-            try await programManager.useProgram(userInfo: userInfo,
-                                                program: programSetDate)
-            try await userManager.userProgramUpdate(programId: program.id)
-        } catch {
-            handleError(error, title: "Use Error", subtitle: "Sorry try again")
         }
+        tasks.append(task)
+    }
+    
+    func useProgram(program: Program) {
+        Task{
+            let programSetDate = setDate(program: program)
+            do{
+                guard let userInfo = userManager.userInfo else {
+                    throw AppAuthError.userNotFound
+                }
+                try await programManager.useProgram(userInfo: userInfo,
+                                                    program: programSetDate)
+                try await userManager.userProgramUpdate(programId: program.id)
+            } catch {
+                handleError(error, title: "Use Error", subtitle: "Sorry try again")
+            }
+        }
+    }
+    
+    func cancelTasks() {
+        tasks.forEach({ $0.cancel() })
+        tasks = []
     }
     
     private func setDate(program: Program) -> Program {

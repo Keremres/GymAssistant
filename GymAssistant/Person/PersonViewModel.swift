@@ -29,34 +29,38 @@ final class PersonViewModel: ObservableObject{
         }
     }
     
-    func programOut() async {
-        do{
-            guard let userInfo = userManager.userInfo else {
-                throw AppAuthError.userNotFound
+    func programOut() {
+        Task{
+            do{
+                guard let userInfo = userManager.userInfo else {
+                    throw AppAuthError.userNotFound
+                }
+                guard userInfo.programId != nil , userInfo.programId != "" else {
+                    throw AppAuthError.userNotFound
+                }
+                try await userManager.userProgramDelete()
+                programManager.programClear()
+            } catch {
+                handleError(error,
+                            title: "Program Out Error",
+                            subtitle: "Sorry try again")
             }
-            guard userInfo.programId != nil , userInfo.programId != "" else {
-                throw AppAuthError.userNotFound
-            }
-            try await userManager.userProgramDelete()
-            programManager.programClear()
-        } catch {
-            handleError(error,
-                        title: "Program Out Error",
-                        subtitle: "Sorry try again")
         }
     }
     
-    func deleteAccount() async {
-        do{
-            guard userManager.userInfo != nil else {
-                throw AppAuthError.userNotFound
+    func deleteAccount() {
+        Task{
+            do{
+                guard userManager.userInfo != nil else {
+                    throw AppAuthError.userNotFound
+                }
+                try await userManager.userInfoDelete()
+                try await authManager.deleteAccount()
+            } catch {
+                handleError(error,
+                            title: "Delete Account Error",
+                            subtitle: "Sorry try again")
             }
-            try await userManager.userInfoDelete()
-            try await authManager.deleteAccount()
-        } catch {
-            handleError(error,
-                        title: "Delete Account Error",
-                        subtitle: "Sorry try again")
         }
     }
     

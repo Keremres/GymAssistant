@@ -8,7 +8,6 @@
 import Foundation
 import Combine
 
-@MainActor
 final class UserManager: ObservableObject{
     private let service: UserService
     private let authManager: AuthManager
@@ -28,7 +27,9 @@ final class UserManager: ObservableObject{
         authManager.$authInfo
             .sink { [weak self] authInfo in
                 guard let authInfo = authInfo else {
-                    self?.userInfo = nil
+                    DispatchQueue.main.async{
+                        self?.userInfo = nil
+                    }
                     return
                 }
                 Task{ [weak self] in
@@ -41,13 +42,18 @@ final class UserManager: ObservableObject{
     
     /// Fetches user information for the specified user ID.
     func getUserInfo(userId: String) async throws {
-        self.userInfo = try await service.getUserInfo(userId: userId)
+        let userInfo = try await service.getUserInfo(userId: userId)
+        DispatchQueue.main.async {
+            self.userInfo = userInfo
+        }
     }
     
     /// Updates user information and reflects the latest data in userInfo.
     func updateUserInfo(update: UserInfo) async throws {
         try await service.updateUser(userInfo: update)
-        self.userInfo = update
+        DispatchQueue.main.async{
+            self.userInfo = update
+        }
     }
     
     /// Updates the user's program with the provided program ID, allowing the app to manage program assignments for the user.
@@ -55,7 +61,10 @@ final class UserManager: ObservableObject{
         guard let userInfo = self.userInfo else {
             throw AppAuthError.userNotFound
         }
-        self.userInfo = try await service.userProgramUpdate(userInfo: userInfo, programId: programId)
+        let newUserInfo = try await service.userProgramUpdate(userInfo: userInfo, programId: programId)
+        DispatchQueue.main.async{
+            self.userInfo = newUserInfo
+        }
     }
     
     /// Removes the assigned program from the user’s data.
@@ -63,7 +72,10 @@ final class UserManager: ObservableObject{
         guard let userInfo = self.userInfo else {
             throw AppAuthError.userNotFound
         }
-        self.userInfo = try await service.userProgramDelete(userInfo: userInfo)
+        let newUserInfo = try await service.userProgramDelete(userInfo: userInfo)
+        DispatchQueue.main.async{
+            self.userInfo = newUserInfo
+        }
     }
     
     /// Deletes the current user’s information entirely from the system.
@@ -72,7 +84,9 @@ final class UserManager: ObservableObject{
             throw AppAuthError.userNotFound
         }
         try await service.userInfoDelete(userInfoId: userInfoId)
-        self.userInfo = nil
+        DispatchQueue.main.async{
+            self.userInfo = nil
+        }
     }
     
     /// Updates the last login time of the current user.
@@ -80,6 +94,9 @@ final class UserManager: ObservableObject{
         guard let userInfo = self.userInfo else {
             throw AppAuthError.userNotFound
         }
-        self.userInfo = try await service.updateUserLogin(userInfo: userInfo)
+        let newUserInfo = try await service.updateUserLogin(userInfo: userInfo)
+        DispatchQueue.main.async{
+            self.userInfo = newUserInfo
+        }
     }
 }

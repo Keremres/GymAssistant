@@ -7,7 +7,6 @@
 
 import Foundation
 
-@MainActor
 final class AuthManager: ObservableObject {
     private let service: AuthService
     
@@ -33,7 +32,9 @@ final class AuthManager: ObservableObject {
     private func addAuthListener() {
         Task{
             for await auth in service.addAuthenticatedUserListener() {
-                self.authInfo = auth
+                DispatchQueue.main.async{
+                    self.authInfo = auth
+                }
             }
         }
     }
@@ -59,13 +60,17 @@ final class AuthManager: ObservableObject {
     /// Signs out the current user and clears `authInfo`.
     func signOut() throws {
         try service.signOut()
-        self.authInfo = nil
+        DispatchQueue.main.async{
+            self.authInfo = nil
+        }
     }
     
     /// Deletes the currently authenticated user’s account and clears `authInfo`.
     func deleteAccount() async throws {
         try await service.deleteAccount()
-        self.authInfo = nil
+        DispatchQueue.main.async{
+            self.authInfo = nil
+        }
     }
 }
 

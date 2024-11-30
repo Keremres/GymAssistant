@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct CreateView: View {
-    @Environment(\.dismiss) var dismiss
-    @StateObject var viewModel: CreateViewModel = CreateViewModel()
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel: CreateViewModel = CreateViewModel()
     
     var body: some View {
         NavigationStack{
@@ -105,16 +105,12 @@ extension CreateView {
                     .confirmationDialog(DialogText.save, isPresented: $viewModel.showDialog, titleVisibility: .visible){
                         Button(DialogText.cancel, role: .cancel, action: {})
                         Button(DialogText.save, action: {
-                            Task{
-                                await viewModel.create()
-                                dismiss()
-                            }
+                            viewModel.create()
+                            dismiss()
                         })
                         Button(DialogText.publish, action: {
-                            Task{
-                                await viewModel.publishProgram()
-                                dismiss()
-                            }
+                            viewModel.publishProgram()
+                            dismiss()
                         })
                     } message: {
                         Text(DialogText.areYouSure)

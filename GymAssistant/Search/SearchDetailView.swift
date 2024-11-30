@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SearchDetailView: View {
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject var searchViewModel: SearchViewModel
     let program: Program
     
@@ -22,10 +22,8 @@ struct SearchDetailView: View {
                 .confirmationDialog(DialogText.useProgram, isPresented: $searchViewModel.showDialog, titleVisibility: .visible){
                     Button(DialogText.cancel, role: .cancel, action: {})
                     Button(DialogText.useProgram, action: {
-                        Task{
-                            await searchViewModel.useProgram(program: program)
-                            dismiss()
-                        }
+                        searchViewModel.useProgram(program: program)
+                        dismiss()
                     })
                 } message: {
                     Text(DialogText.areYouSure)

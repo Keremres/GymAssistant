@@ -7,7 +7,6 @@
 
 import Foundation
 
-@MainActor
 final class ProgramManager: ObservableObject{
     private let service: ProgramService
     
@@ -23,7 +22,9 @@ final class ProgramManager: ObservableObject{
     ///   - program: The program to associate with the user.
     func useProgram(userInfo: UserInfo, program: Program) async throws {
         try await service.useProgram(userInfo: userInfo, program: program)
-        self.program = program
+        DispatchQueue.main.async{
+            self.program = program
+        }
     }
     
     /// Publishes a new program to the backend.
@@ -35,7 +36,10 @@ final class ProgramManager: ObservableObject{
     /// Retrieves the user's active program from the backend and sets it locally.
     /// - Parameter userInfo: The user's information.
     func getProgram(userInfo: UserInfo) async throws {
-        self.program = try await service.getProgram(userInfo: userInfo)
+        let program = try await service.getProgram(userInfo: userInfo)
+        DispatchQueue.main.async{
+            self.program = program
+        }
     }
     
     /// Fetches all available programs.
@@ -58,7 +62,9 @@ final class ProgramManager: ObservableObject{
     func deleteProgramHistory(userInfo: UserInfo, programId: Program.ID) async throws {
         try await service.deleteUserProgramHistory(userInfo: userInfo, programId: programId)
         if self.program?.id == programId{
-            self.program = nil
+            DispatchQueue.main.async{
+                self.program = nil
+            }
         }
     }
     
@@ -66,7 +72,10 @@ final class ProgramManager: ObservableObject{
     /// - Parameter userInfo: The user's information.
     func newWeek(userInfo: UserInfo) async throws {
         guard let program = self.program else { return }
-        self.program = try await service.newWeek(userInfo: userInfo, program: program)
+        let newProgram = try await service.newWeek(userInfo: userInfo, program: program)
+        DispatchQueue.main.async{
+            self.program = newProgram
+        }
     }
     
     /// Saves a specific day of the program.
@@ -75,7 +84,10 @@ final class ProgramManager: ObservableObject{
     ///   - dayModel: The model representing the day to save.
     func saveDay(userInfo: UserInfo, dayModel: DayModel) async throws {
         guard let program = self.program else { return }
-        self.program = try await service.saveDay(userInfo: userInfo, dayModel: dayModel, program: program)
+        let newProgram = try await service.saveDay(userInfo: userInfo, dayModel: dayModel, program: program)
+        DispatchQueue.main.async{
+            self.program = newProgram
+        }
     }
     
     /// Calculates chart data for a specific exercise based on the program data.
@@ -88,6 +100,8 @@ final class ProgramManager: ObservableObject{
     
     /// Clears the currently active program from memory.
     func programClear() {
-        self.program = nil
+        DispatchQueue.main.async{
+            self.program = nil
+        }
     }
 }
