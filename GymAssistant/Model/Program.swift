@@ -180,6 +180,14 @@ extension Program{
                        programClass: "Powerlifting",
                        week: [WeekModel.baseWeek()])
     }
+    
+    static func mockProgram(programName: String = "3x5",
+                            programClass: String = "Powerlifting",
+                            week: [WeekModel] = [.baseWeek()]) -> Program {
+        Program(programName: programName,
+                programClass: programClass,
+                week: week)
+    }
 }
 
 extension WeekModel{

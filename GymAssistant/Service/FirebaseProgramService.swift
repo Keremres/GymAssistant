@@ -10,11 +10,18 @@ import Firebase
 
 final class FirebaseProgramService: ProgramService{
     
-    private func userProgramCollection(_ userInfo: UserInfo) -> CollectionReference {
-        Firestore.firestore().collection(FirebasePath.users).document(userInfo.id).collection(FirebasePath.program)
+    private let userCollection: CollectionReference
+    private let programCollection: CollectionReference
+    
+    init(userCollection: CollectionReference = Firestore.firestore().collection(FirebasePath.users),
+    programCollection: CollectionReference = Firestore.firestore().collection(FirebasePath.programs)) {
+        self.userCollection = userCollection
+        self.programCollection = programCollection
     }
     
-    private let programCollection: CollectionReference = Firestore.firestore().collection(FirebasePath.programs)
+    private func userProgramCollection(_ userInfo: UserInfo) -> CollectionReference {
+        userCollection.document(userInfo.id).collection(FirebasePath.program)
+    }
     
     func useProgram(userInfo: UserInfo, program: Program) async throws {
         try await userProgramCollection(userInfo).setDocument(document: program)

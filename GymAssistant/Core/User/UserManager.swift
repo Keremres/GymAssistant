@@ -41,62 +41,56 @@ final class UserManager: ObservableObject{
     }
     
     /// Fetches user information for the specified user ID.
+    @MainActor
     func getUserInfo(userId: String) async throws {
         let userInfo = try await service.getUserInfo(userId: userId)
-        DispatchQueue.main.async {
-            self.userInfo = userInfo
-        }
+        self.userInfo = userInfo
     }
     
     /// Updates user information and reflects the latest data in userInfo.
+    @MainActor
     func updateUserInfo(update: UserInfo) async throws {
         try await service.updateUser(userInfo: update)
-        DispatchQueue.main.async{
-            self.userInfo = update
-        }
+        self.userInfo = update
     }
     
     /// Updates the user's program with the provided program ID, allowing the app to manage program assignments for the user.
+    @MainActor
     func userProgramUpdate(programId: Program.ID) async throws {
         guard let userInfo = self.userInfo else {
             throw AppAuthError.userNotFound
         }
         let newUserInfo = try await service.userProgramUpdate(userInfo: userInfo, programId: programId)
-        DispatchQueue.main.async{
-            self.userInfo = newUserInfo
-        }
+        self.userInfo = newUserInfo
     }
     
     /// Removes the assigned program from the user’s data.
+    @MainActor
     func userProgramDelete() async throws {
         guard let userInfo = self.userInfo else {
             throw AppAuthError.userNotFound
         }
         let newUserInfo = try await service.userProgramDelete(userInfo: userInfo)
-        DispatchQueue.main.async{
-            self.userInfo = newUserInfo
-        }
+        self.userInfo = newUserInfo
     }
     
     /// Deletes the current user’s information entirely from the system.
+    @MainActor
     func userInfoDelete() async throws {
         guard let userInfoId = self.userInfo?.id else {
             throw AppAuthError.userNotFound
         }
         try await service.userInfoDelete(userInfoId: userInfoId)
-        DispatchQueue.main.async{
-            self.userInfo = nil
-        }
+        self.userInfo = nil
     }
     
     /// Updates the last login time of the current user.
+    @MainActor
     private func updateUserLogin() async throws {
         guard let userInfo = self.userInfo else {
             throw AppAuthError.userNotFound
         }
         let newUserInfo = try await service.updateUserLogin(userInfo: userInfo)
-        DispatchQueue.main.async{
-            self.userInfo = newUserInfo
-        }
+        self.userInfo = newUserInfo
     }
 }

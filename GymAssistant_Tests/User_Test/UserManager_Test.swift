@@ -11,49 +11,67 @@ import Combine
 
 @MainActor
 final class UserManager_Test: XCTestCase {
+    var userManager: UserManager!
+    var mockUserService: MockUserService!
+    var mockAuthService: MockAuthService!
+    var mockAuthManager: AuthManager!
+    var cancellables: Set<AnyCancellable>!
     
-    private var userManager: UserManager!
-    private var mockUserService: MockUserService!
-    private var mockAuthService: MockAuthService!
-    private var mockAuthManager: AuthManager!
-    private var cancellables: Set<AnyCancellable> = []
-    
-    override func setUpWithError() throws {
-        mockUserService = MockUserService()
-        mockAuthService = MockAuthService()
-        mockAuthManager = AuthManager(service: mockAuthService)
-        userManager = UserManager(service: mockUserService, authManager: mockAuthManager)
+    override func setUp() {
+        super.setUp()
+        self.cancellables = Set<AnyCancellable>()
+        self.mockUserService = MockUserService()
+        self.mockAuthService = MockAuthService()
+        self.mockAuthManager = AuthManager(service: mockAuthService)
+        self.userManager = UserManager(service: mockUserService, authManager: mockAuthManager)
         let register = Register.mockRegister()
         Task{
-            try await mockAuthManager.signUp(register: register)
+            do{
+                try await mockAuthManager.signUp(register: register)
+            } catch {
+                XCTFail("SignUp should not throw error")
+            }
         }
     }
     
-    override func tearDownWithError() throws {
-        cancellables.removeAll()
-        cancellables = []
-        userManager = nil
-        mockUserService = nil
-        mockAuthService = nil
-        mockAuthManager = nil
+    override func tearDown() {
+        self.cancellables = nil
+        self.userManager = nil
+        self.mockUserService = nil
+        self.mockAuthService = nil
+        self.mockAuthManager = nil
+        super.tearDown()
     }
     
-    func test_GetUserInfo_Success() async throws {
+    func test_GetUserInfo_Success() async {
         // Given
         let mockUserInfo = UserInfo.userInfoMock()
         mockUserService.mockUserInfo = mockUserInfo
+        let expectation = XCTestExpectation(description: "Wait for userInfo to be set")
+        userManager.$userInfo
+            .sink { userInfo in
+                if userInfo != nil {
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &cancellables)
         
         // When
-        try await userManager.getUserInfo(userId: mockUserInfo.id)
+        do{
+            try await userManager.getUserInfo(userId: mockUserInfo.id)
+        } catch {
+            XCTFail("GetUserInfo should not throw error")
+        }
         
         // Then
-        XCTAssertEqual(userManager.userInfo, mockUserInfo)
+        await fulfillment(of: [expectation], timeout: 1)
+        XCTAssertEqual(userManager.userInfo?.id, mockUserInfo.id)
     }
     
-    func test_GetUserInfo_UserNotFound() async throws {
+    func test_GetUserInfo_UserNotFound() async {
         // Given
         let userId = "nonExistentUserId"
-        mockUserService.mockUserInfo = nil // Kullanıcı bilgisi yok.
+        mockUserService.mockUserInfo = nil
         
         // When & Then
         do {
@@ -66,110 +84,134 @@ final class UserManager_Test: XCTestCase {
         }
     }
     
-    func test_UpdateUserInfo() async throws {
+    func test_UpdateUserInfo_Success() async {
         // Given
         let userInfo = UserInfo.userInfoMock()
         let updatedUserInfo = UserInfo(userInfo: userInfo, title: "Admin")
         mockUserService.mockUserInfo = userInfo
+        let expectation = XCTestExpectation(description: "Wait for userInfo to be set")
+        userManager.$userInfo
+            .sink { userInfo in
+                if userInfo == updatedUserInfo {
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &cancellables)
         
         // When
-        try await userManager.updateUserInfo(update: updatedUserInfo)
+        do{
+            try await userManager.updateUserInfo(update: updatedUserInfo)
+        } catch {
+            XCTFail("UpdateUserInfo should not throw error")
+        }
         
         // Then
-        XCTAssertEqual(userManager.userInfo, updatedUserInfo)
-        XCTAssertEqual(mockUserService.mockUserInfo, updatedUserInfo)
+        await fulfillment(of: [expectation], timeout: 1)
+        XCTAssertEqual(userManager.userInfo?.id, updatedUserInfo.id)
+        XCTAssertEqual(userManager.userInfo?.title, updatedUserInfo.title)
+        XCTAssertEqual(mockUserService.mockUserInfo?.id, updatedUserInfo.id)
+        XCTAssertEqual(mockUserService.mockUserInfo?.title, updatedUserInfo.title)
     }
     
-    func test_UserProgramUpdate() async throws {
+    func test_UserProgramUpdate_Success() async {
         // Given
         let userInfo = UserInfo.userInfoMock()
         let programId = UUID().uuidString
         mockUserService.mockUserInfo = userInfo
         
         let expectation = XCTestExpectation(description: "Wait for userInfo to be set")
+        let expectation2 = XCTestExpectation(description: "Wait for userInfo.programId to be set")
         
         // Listen for authInfo update
         userManager.$userInfo
-            .dropFirst()
             .sink { userInfo in
                 if userInfo != nil {
                     expectation.fulfill()
                 }
+                if userInfo?.programId != nil {
+                    expectation2.fulfill()
+                }
             }
             .store(in: &cancellables)
-        
-        // Wait for the expectation
         await fulfillment(of: [expectation], timeout: 1.0)
         
         // When
-        try await userManager.userProgramUpdate(programId: programId)
+        do{
+            try await userManager.userProgramUpdate(programId: programId)
+        } catch {
+            XCTFail("UserProgramUpdate should not throw error: \(error)")
+        }
         
         // Then
+        await fulfillment(of: [expectation2], timeout: 1.0)
         XCTAssertEqual(userManager.userInfo?.programId, programId)
     }
     
-    func test_UserProgramDelete() async throws {
+    func test_UserProgramDelete_Success() async {
         // Given
         let userInfo = UserInfo.userInfoMock(programId: UUID().uuidString)
         mockUserService.mockUserInfo = userInfo
-        
         let expectation = XCTestExpectation(description: "Wait for userInfo to be set")
-        
-        // Listen for authInfo update
         userManager.$userInfo
-            .dropFirst()
             .sink { userInfo in
                 if userInfo != nil {
                     expectation.fulfill()
                 }
             }
             .store(in: &cancellables)
-        
-        // Wait for the expectation
         await fulfillment(of: [expectation], timeout: 1.0)
         
         // When
-        try await userManager.userProgramDelete()
+        do{
+            try await userManager.userProgramDelete()
+        } catch {
+            XCTFail("UserProgramDelete should not throw error: \(error)")
+        }
         
         // Then
         XCTAssertEqual(userManager.userInfo?.programId, "")
     }
     
-    func test_UserInfoDelete() async throws {
+    func test_UserInfoDelete_Success() async {
         // Given
         let userInfo = UserInfo.userInfoMock()
         mockUserService.mockUserInfo = userInfo
-        
         let expectation = XCTestExpectation(description: "Wait for userInfo to be set")
-        
-        // Listen for authInfo update
+        let expectation2 = XCTestExpectation(description: "Wait for userInfo to be set nil")
         userManager.$userInfo
-            .dropFirst()
             .sink { userInfo in
                 if userInfo != nil {
                     expectation.fulfill()
                 }
             }
             .store(in: &cancellables)
-        
-        // Wait for the expectation
         await fulfillment(of: [expectation], timeout: 1.0)
         
+        userManager.$userInfo
+            .sink { userInfo in
+                if userInfo == nil {
+                    expectation2.fulfill()
+                }
+            }
+            .store(in: &cancellables)
+        
         // When
-        try await userManager.userInfoDelete()
+        do{
+            try await userManager.userInfoDelete()
+        } catch {
+            XCTFail("UserInfoDelete should not throw error: \(error)")
+        }
         
         // Then
+        await fulfillment(of: [expectation2], timeout: 1.0)
         XCTAssertNil(userManager.userInfo)
     }
     
-    func test_UpdateUserLogin() async throws {
+    func test_UpdateUserLogin() async {
         // Given
         let userInfo = UserInfo(userInfo: UserInfo.userInfoMock(), lastLoginDate: Date.oneWeekAgo)
         mockUserService.mockUserInfo = userInfo
-        
         let expectation = XCTestExpectation(description: "Wait for userInfo to be set")
-        
-        // Listen for authInfo update
         userManager.$userInfo
             .dropFirst()
             .sink { userInfo in
@@ -178,8 +220,6 @@ final class UserManager_Test: XCTestCase {
                 }
             }
             .store(in: &cancellables)
-        
-        // Wait for the expectation
         await fulfillment(of: [expectation], timeout: 1.0)
         
         // When

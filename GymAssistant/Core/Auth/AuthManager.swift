@@ -30,11 +30,9 @@ final class AuthManager: ObservableObject {
     /// Listens for changes in authentication state asynchronously and updates `authInfo`.
     /// Uses a Task to monitor `service.addAuthenticatedUserListener()` and updates authInfo when changes occur.
     private func addAuthListener() {
-        Task{
+        Task{ @MainActor in
             for await auth in service.addAuthenticatedUserListener() {
-                DispatchQueue.main.async{
-                    self.authInfo = auth
-                }
+                self.authInfo = auth
             }
         }
     }
@@ -58,19 +56,17 @@ final class AuthManager: ObservableObject {
     }
     
     /// Signs out the current user and clears `authInfo`.
+    @MainActor
     func signOut() throws {
         try service.signOut()
-        DispatchQueue.main.async{
-            self.authInfo = nil
-        }
+        self.authInfo = nil
     }
     
     /// Deletes the currently authenticated user’s account and clears `authInfo`.
+    @MainActor
     func deleteAccount() async throws {
         try await service.deleteAccount()
-        DispatchQueue.main.async{
-            self.authInfo = nil
-        }
+        self.authInfo = nil
     }
 }
 

@@ -9,10 +9,16 @@ import Foundation
 
 @MainActor
 final class DetailViewModel: ObservableObject {
-    private let userManager: UserManager = AppContainer.shared.userManager
-    private let programManager: ProgramManager = AppContainer.shared.programManager
+    private let userManager: UserManager
+    private let programManager: ProgramManager
     
     @Published var alert: CustomError? = nil
+    
+    init(programManager: ProgramManager = AppContainer.shared.programManager,
+         userManager: UserManager = AppContainer.shared.userManager) {
+        self.programManager = programManager
+        self.userManager = userManager
+    }
     
     func saveDay(dayModel: DayModel) {
         Task{

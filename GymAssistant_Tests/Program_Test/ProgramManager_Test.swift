@@ -6,105 +6,157 @@
 //
 
 import XCTest
+import Combine
 @testable import GymAssistant
 
 @MainActor
 final class ProgramManager_Test: XCTestCase {
+    var cancellables: Set<AnyCancellable>!
+    var programManager: ProgramManager!
+    var mockService: MockProgramService!
     
-    private var programManager: ProgramManager!
-    private var mockService: MockProgramService!
-    
-    override func setUpWithError() throws {
-        mockService = MockProgramService()
-        programManager = ProgramManager(service: mockService)
+    override func setUp() {
+        super.setUp()
+        self.cancellables = Set<AnyCancellable>()
+        self.mockService = MockProgramService()
+        self.programManager = ProgramManager(service: mockService)
     }
     
-    override func tearDownWithError() throws {
-        programManager = nil
-        mockService = nil
+    override func tearDown() {
+        self.cancellables = nil
+        self.programManager = nil
+        self.mockService = nil
+        super.tearDown()
     }
     
-    func test_UseProgram() async throws {
+    func test_UseProgram() async {
         // Given
         let userInfo = UserInfo.userInfoMock()
         let program = Program.MOCK_PROGRAM
+        let expectation = XCTestExpectation(description: "Wait for program to be set")
+        programManager.$program
+            .sink { program in
+                if program != nil {
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &cancellables)
         
         // When
-        try await programManager.useProgram(userInfo: userInfo, program: program)
+        do{
+            try await programManager.useProgram(userInfo: userInfo, program: program)
+        } catch {
+            XCTFail("UseProgram should not throw error: \(error)")
+        }
         
         // Then
+        await fulfillment(of: [expectation], timeout: 1)
         XCTAssertEqual(programManager.program?.id, program.id)
         XCTAssertEqual(mockService.mockUserProgramHistory.first?.id, program.id)
     }
     
-    func test_PublishProgram() async throws {
+    func test_PublishProgram() async {
         // Given
         let program = Program.MOCK_PROGRAM
+        let expectation = XCTestExpectation(description: "Wait for program to be published")
+        mockService.$mockPublishedPrograms
+            .sink { publishedPrograms in
+                if publishedPrograms.contains(where: { $0.id == program.id }) {
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &cancellables)
         
         // When
-        try await programManager.publishProgram(program: program)
+        do{
+            try await programManager.publishProgram(program: program)
+        } catch {
+            XCTFail("PublishProgram should not throw error: \(error)")
+        }
         
         // Then
+        await fulfillment(of: [expectation], timeout: 1)
         XCTAssertEqual(mockService.mockPublishedPrograms.first?.id, program.id)
     }
     
-    func test_GetProgram() async throws {
+    func test_GetProgram() async {
         // Given
         let program = Program.MOCK_PROGRAM
         let userInfo = UserInfo.userInfoMock(programId: program.id)
         mockService.mockProgram = program
+        let expectation = XCTestExpectation(description: "Wait for program to be fetched")
+        programManager.$program
+            .sink { fetchedProgram in
+                if fetchedProgram?.id == program.id {
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &cancellables)
         
         // When
-        try await programManager.getProgram(userInfo: userInfo)
+        do{
+            try await programManager.getProgram(userInfo: userInfo)
+        } catch {
+            XCTFail("GetProgram should not throw error: \(error)")
+        }
         
         // Then
+        await fulfillment(of: [expectation], timeout: 1)
         XCTAssertEqual(programManager.program?.id, program.id)
     }
     
-    func test_GetPrograms() async throws {
+    func test_GetPrograms() async {
         // Given
         let program1 = Program.baseProgram()
         let program2 = Program.baseProgram()
         mockService.mockPublishedPrograms = [program1, program2]
         
-        // When
-        let programs = try await programManager.getPrograms()
-        
-        // Then
-        XCTAssertEqual(programs.count, 2)
-        XCTAssertEqual(programs.first?.id, program1.id)
-        XCTAssertEqual(programs.last?.id, program2.id)
+        // When & Then
+        do{
+            let programs = try await programManager.getPrograms()
+            XCTAssertEqual(programs.count, 2)
+            XCTAssertEqual(programs.first?.id, program1.id)
+            XCTAssertEqual(programs.last?.id, program2.id)
+        } catch {
+            XCTFail("GetPrograms should not throw error: \(error)")
+        }
     }
     
-    func test_GetProgramHistory() async throws {
+    func test_GetProgramHistory() async {
         // Given
         let program1 = Program.baseProgram()
         let program2 = Program.baseProgram()
         let userInfo = UserInfo.userInfoMock(programId: program2.id)
         mockService.mockUserProgramHistory = [program1, program2]
         
-        // When
-        let history = try await programManager.getProgramHistory(userInfo: userInfo)
-        
-        // Then
-        XCTAssertEqual(history.count, 2)
-        XCTAssertEqual(history.last?.id, program2.id)
+        // When & Then
+        do{
+            let history = try await programManager.getProgramHistory(userInfo: userInfo)
+            XCTAssertEqual(history.count, 2)
+            XCTAssertEqual(history.last?.id, program2.id)
+        } catch {
+            XCTFail("GetProgramHistory should not throw error: \(error)")
+        }
     }
     
-    func test_DeleteProgramHistory() async throws {
+    func test_DeleteProgramHistory() async {
         // Given
         let program = Program.MOCK_PROGRAM
         let userInfo = UserInfo.userInfoMock(programId: program.id)
         mockService.mockUserProgramHistory = [program]
         
         // When
-        try await programManager.deleteProgramHistory(userInfo: userInfo, programId: program.id)
+        do{
+            try await programManager.deleteProgramHistory(userInfo: userInfo, programId: program.id)
+        } catch {
+            XCTFail("DeleteProgramHistory should not throw error: \(error)")
+        }
         
         // Then
         XCTAssertTrue(mockService.mockUserProgramHistory.isEmpty)
     }
     
-    func test_NewWeek() async throws {
+    func test_NewWeek() async {
         // Given
         let day = DayModel.MOCK_DAY
         let week = WeekModel(date: Date.oneWeekAgo,
@@ -116,13 +168,17 @@ final class ProgramManager_Test: XCTestCase {
         programManager.program = program
         
         // When
-        try await programManager.newWeek(userInfo: userInfo)
+        do{
+            try await programManager.newWeek(userInfo: userInfo)
+        } catch {
+            XCTFail("NewWeek should not throw error: \(error)")
+        }
         
         // Then
         XCTAssertEqual(programManager.program?.week.count, 2)
     }
     
-    func test_SaveDay() async throws {
+    func test_SaveDay() async {
         // Given
         let exercise = Exercises(exercise: "Squat",
                                  againStart: 6,
@@ -150,7 +206,11 @@ final class ProgramManager_Test: XCTestCase {
         programManager.program = program
         
         // When
-        try await programManager.saveDay(userInfo: userInfo, dayModel: givenDay)
+        do{
+            try await programManager.saveDay(userInfo: userInfo, dayModel: givenDay)
+        } catch {
+            XCTFail("SaveDay should not throw error: \(error)")
+        }
         
         // Then
         XCTAssertEqual(Date.getCurrentWeekInt(date: programManager.program!.week[0].day[0].exercises[0].date), Date.getCurrentWeekInt(date: Date()))

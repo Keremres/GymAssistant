@@ -23,4 +23,6 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .environmentObject(AppContainer.shared.authManager)
+        .environmentObject(AppContainer.shared.userManager)
+        .environmentObject(AppContainer.shared.programManager)
 }

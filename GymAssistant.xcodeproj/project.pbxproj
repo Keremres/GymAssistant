@@ -31,7 +31,6 @@
 		034463112C554AC100F588E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 034463102C554AC100F588E6 /* Assets.xcassets */; };
 		0357F2902C6BC2A000BAE833 /* ForgotPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0357F28F2C6BC2A000BAE833 /* ForgotPassword.swift */; };
 		0357F2942C6E453500BAE833 /* ProgramClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0357F2932C6E453500BAE833 /* ProgramClass.swift */; };
-		035879E22C946A6300B0AC78 /* ErrorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035879E12C946A6300B0AC78 /* ErrorAlert.swift */; };
 		035CFDE32C5AC58C001DE1EE /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035CFDE22C5AC58C001DE1EE /* Program.swift */; };
 		035CFDE52C5AD450001DE1EE /* DayGroupBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035CFDE42C5AD450001DE1EE /* DayGroupBox.swift */; };
 		037C18E02C56E76100934F70 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 037C18DF2C56E76100934F70 /* FirebaseFirestoreSwift */; };
@@ -63,6 +62,7 @@
 		03A052852C81122A00362F5C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03A052842C81122A00362F5C /* Assets.xcassets */; };
 		03A052892C81122A00362F5C /* GymAssistantWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 03A0527A2C81122900362F5C /* GymAssistantWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		03B7BEA12CDE876000368EA2 /* UINavigationController+EXT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B7BEA02CDE876000368EA2 /* UINavigationController+EXT.swift */; };
+		03C87F1D2D19F465008FBF3A /* ErrorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 035879E12C946A6300B0AC78 /* ErrorAlert.swift */; };
 		03D8471B2C5E4D270041E99B /* DetailStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D8471A2C5E4D270041E99B /* DetailStepper.swift */; };
 		03D8471D2C5E533E0041E99B /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D8471C2C5E533E0041E99B /* ChartView.swift */; };
 		03D8471F2C5ED0870041E99B /* Weekday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D8471E2C5ED0870041E99B /* Weekday.swift */; };
@@ -78,7 +78,6 @@
 		03DE087C2C73DE270037E028 /* CreateSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03DE087B2C73DE270037E028 /* CreateSheet.swift */; };
 		03E5FB492C56892400E31D34 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 03E5FB482C56892400E31D34 /* GoogleService-Info.plist */; };
 		03E5FB4E2C5698ED00E31D34 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 03E5FB4D2C5698ED00E31D34 /* FirebaseStorage */; };
-		03E5FB502C5698FC00E31D34 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 03E5FB4F2C5698FC00E31D34 /* FirebaseAnalytics */; };
 		03E5FB522C56991100E31D34 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 03E5FB512C56991100E31D34 /* FirebaseAuth */; };
 		03E5FB542C56991C00E31D34 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 03E5FB532C56991C00E31D34 /* FirebaseFirestore */; };
 		03FA7D7B2C554DE7008A77A7 /* LoginText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FA7D7A2C554DE7008A77A7 /* LoginText.swift */; };
@@ -201,7 +200,7 @@
 			membershipExceptions = (
 				Auth_Test/MockAuthService.swift,
 				Program_Test/MockProgramService.swift,
-				User_Text/MockUserService.swift,
+				User_Test/MockUserService.swift,
 			);
 			target = 034462D32C55314C00F588E6 /* GymAssistant */;
 		};
@@ -210,7 +209,7 @@
 			membershipExceptions = (
 				Auth_Test/MockAuthService.swift,
 				Program_Test/MockProgramService.swift,
-				User_Text/MockUserService.swift,
+				User_Test/MockUserService.swift,
 			);
 			target = 032625C72CDA5DCF00BF5332 /* GymAssistant_Tests */;
 		};
@@ -236,7 +235,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				037C18E02C56E76100934F70 /* FirebaseFirestoreSwift in Frameworks */,
-				03E5FB502C5698FC00E31D34 /* FirebaseAnalytics in Frameworks */,
 				03E5FB542C56991C00E31D34 /* FirebaseFirestore in Frameworks */,
 				03E5FB522C56991100E31D34 /* FirebaseAuth in Frameworks */,
 				03E5FB4E2C5698ED00E31D34 /* FirebaseStorage in Frameworks */,
@@ -621,7 +619,6 @@
 			name = GymAssistant;
 			packageProductDependencies = (
 				03E5FB4D2C5698ED00E31D34 /* FirebaseStorage */,
-				03E5FB4F2C5698FC00E31D34 /* FirebaseAnalytics */,
 				03E5FB512C56991100E31D34 /* FirebaseAuth */,
 				03E5FB532C56991C00E31D34 /* FirebaseFirestore */,
 				037C18DF2C56E76100934F70 /* FirebaseFirestoreSwift */,
@@ -744,6 +741,7 @@
 				038932452CBA7397008841D2 /* FirebaseUserService.swift in Sources */,
 				038931B92CB8170F008841D2 /* SignIn.swift in Sources */,
 				038931D62CB93E05008841D2 /* ProgramService.swift in Sources */,
+				03C87F1D2D19F465008FBF3A /* ErrorAlert.swift in Sources */,
 				030E0A772C66569E005B0725 /* PersonViewModel.swift in Sources */,
 				034463042C553F7200F588E6 /* TabBarConstants.swift in Sources */,
 				038931D42CB81C76008841D2 /* ProgramManager.swift in Sources */,
@@ -780,7 +778,6 @@
 				038931A42CB8157C008841D2 /* Encodable+EXT.swift in Sources */,
 				03FA7D822C557800008A77A7 /* SearchView.swift in Sources */,
 				0300C4EA2C5D03B300F7CA94 /* HomeViewModel.swift in Sources */,
-				035879E22C946A6300B0AC78 /* ErrorAlert.swift in Sources */,
 				038931B72CB81709008841D2 /* Register.swift in Sources */,
 				0382EDBC2CD4D17C00E8DE5E /* AppContainer.swift in Sources */,
 				03D849E82C7BDF4B0053835E /* ProgramBoxView.swift in Sources */,
@@ -1190,11 +1187,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 03E5FB4B2C56934D00E31D34 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
-		};
-		03E5FB4F2C5698FC00E31D34 /* FirebaseAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 03E5FB4B2C56934D00E31D34 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
 		};
 		03E5FB512C56991100E31D34 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;

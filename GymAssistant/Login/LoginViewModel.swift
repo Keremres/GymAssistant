@@ -10,13 +10,17 @@ import Foundation
 @MainActor
 final class LoginViewModel: ObservableObject {
     
-    private let authManager: AuthManager = AppContainer.shared.authManager
+    private let authManager: AuthManager
     
     @Published var signInModel: SignIn = SignIn(email: "",
                                                 password: "")
     @Published var forgotPassword: String = ""
     @Published var showForgotPassword: Bool = false
     @Published var alert: CustomError? = nil
+    
+    init(authManager: AuthManager = AppContainer.shared.authManager) {
+        self.authManager = authManager
+    }
     
     func signIn() {
         Task{

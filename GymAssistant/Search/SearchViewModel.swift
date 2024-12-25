@@ -10,8 +10,8 @@ import Foundation
 @MainActor
 final class SearchViewModel: ObservableObject{
     
-    private let programManager: ProgramManager = AppContainer.shared.programManager
-    private let userManager: UserManager = AppContainer.shared.userManager
+    private let programManager: ProgramManager
+    private let userManager: UserManager
     
     @Published var programs: [Program] = []
     @Published var text: String = ""
@@ -21,7 +21,10 @@ final class SearchViewModel: ObservableObject{
     
     private var tasks: [Task<Void, Never>] = []
     
-    init(){
+    init(programManager: ProgramManager = AppContainer.shared.programManager,
+         userManager: UserManager = AppContainer.shared.userManager){
+        self.programManager = programManager
+        self.userManager = userManager
         getAllPrograms()
     }
     

@@ -11,9 +11,9 @@ import Combine
 @MainActor
 final class HomeViewModel: ObservableObject{
     
-    private let healthManager = HealthManager.shared
-    private let programManager: ProgramManager = AppContainer.shared.programManager
-    private let userManager: UserManager = AppContainer.shared.userManager
+    private let healthManager: HealthManager
+    private let programManager: ProgramManager
+    private let userManager: UserManager
     
     private var cancellables: AnyCancellable?
     
@@ -26,7 +26,12 @@ final class HomeViewModel: ObservableObject{
     
     @Published var alert: CustomError? = nil
     
-    init(){
+    init(healthManager: HealthManager = HealthManager.shared,
+         programManager: ProgramManager = AppContainer.shared.programManager,
+         userManager: UserManager = AppContainer.shared.userManager){
+        self.healthManager = healthManager
+        self.programManager = programManager
+        self.userManager = userManager
         Task{
             do{
                 try await healthManager.requestHealthKitAccess()

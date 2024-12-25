@@ -11,7 +11,7 @@ final class MockProgramService: ProgramService {
     
     var mockProgram: Program?
     var mockUserProgramHistory: [Program] = []
-    var mockPublishedPrograms: [Program] = []
+    @Published var mockPublishedPrograms: [Program] = []
     var shouldThrowError: Bool = false
     
     func useProgram(userInfo: UserInfo, program: Program) async throws {

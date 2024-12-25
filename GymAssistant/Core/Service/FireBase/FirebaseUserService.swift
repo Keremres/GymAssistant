@@ -10,9 +10,11 @@ import Firebase
 
 final class FirebaseUserService: UserService {
     
-    private let userCollection: CollectionReference = Firestore.firestore().collection(FirebasePath.users)
+    private let userCollection: CollectionReference
     
-    init(){}
+    init(userCollection: CollectionReference = Firestore.firestore().collection(FirebasePath.users)) {
+        self.userCollection = userCollection
+    }
     
     func getUserInfo(userId: String) async throws -> UserInfo {
         guard let userInfo: UserInfo = try await userCollection.getDocument(id: userId) else {

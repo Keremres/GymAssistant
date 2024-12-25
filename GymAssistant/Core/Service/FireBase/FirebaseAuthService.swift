@@ -12,9 +12,11 @@ import Firebase
 
 struct FirebaseAuthService: AuthService {
     
-    private let userCollection: CollectionReference = Firestore.firestore().collection(FirebasePath.users)
+    private let userCollection: CollectionReference
     
-    init() {}
+    init(userCollection: CollectionReference = Firestore.firestore().collection(FirebasePath.users)) {
+        self.userCollection = userCollection
+    }
     
     func getAuthenticatedUser() -> AuthInfo? {
         guard let currentUser = Auth.auth().currentUser else { return nil }

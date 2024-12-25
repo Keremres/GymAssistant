@@ -10,14 +10,22 @@ import Foundation
 @MainActor
 final class PersonViewModel: ObservableObject{
     
-    private let authManager: AuthManager = AppContainer.shared.authManager
-    private let userManager: UserManager = AppContainer.shared.userManager
-    private let programManager: ProgramManager = AppContainer.shared.programManager
+    private let authManager: AuthManager
+    private let userManager: UserManager
+    private let programManager: ProgramManager
     
     @Published var alert: CustomError? = nil
     @Published var programOutDialog: Bool = false
     @Published var signOutDialog: Bool = false
     @Published var deleteAccountDialog: Bool = false
+    
+    init(authManager: AuthManager = AppContainer.shared.authManager,
+         userManager: UserManager = AppContainer.shared.userManager,
+         programManager: ProgramManager = AppContainer.shared.programManager) {
+        self.authManager = authManager
+        self.userManager = userManager
+        self.programManager = programManager
+    }
     
     func signOut(){
         do{

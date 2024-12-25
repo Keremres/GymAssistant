@@ -79,7 +79,7 @@ extension CollectionReference {
     }
     
     /// Delete document.
-    func deleteDocument(id: String) async throws {
+    @objc func deleteDocument(id: String) async throws {
         try await self.document(id).delete()
     }
     

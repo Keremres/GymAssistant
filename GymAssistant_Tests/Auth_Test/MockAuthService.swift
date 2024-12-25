@@ -9,8 +9,8 @@ import Foundation
 import Combine
 
 final class MockAuthService: AuthService {
-    private var register: Register?
-    @Published private var authInfo: AuthInfo?
+    var register: Register?
+    @Published private(set) var authInfo: AuthInfo?
     var shouldThrowError: Bool = false
     private var cancellables: Set<AnyCancellable> = []
     
@@ -37,13 +37,12 @@ final class MockAuthService: AuthService {
         try checkShouldThrowError()
         try checkRegister()
         guard register?.email == signIn.email else {
-            throw CustomError.customError(title: "Email",
-                                          subtitle: "Email not found")
+            throw AppAuthError.invalidEmail
         }
         guard register?.password == signIn.password else {
-            throw CustomError.customError(title: "Password",
-                                          subtitle: "Password mismatch")
+            throw AppAuthError.wrongPassword
         }
+        self.authInfo = AuthInfo.mockRegister(register: register!)
     }
     
     func signOut() throws {

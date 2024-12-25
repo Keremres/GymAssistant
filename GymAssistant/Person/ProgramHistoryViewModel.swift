@@ -10,8 +10,8 @@ import Foundation
 @MainActor
 final class ProgramHistoryViewModel: ObservableObject{
     
-    private let programManager: ProgramManager = AppContainer.shared.programManager
-    private let userManager: UserManager = AppContainer.shared.userManager
+    private let programManager: ProgramManager
+    private let userManager: UserManager
     
     private var tasks: [Task<Void, Never>] = []
     
@@ -19,7 +19,10 @@ final class ProgramHistoryViewModel: ObservableObject{
     
     @Published var alert: CustomError? = nil
     
-    init() {
+    init(programManager: ProgramManager = AppContainer.shared.programManager,
+         userManager: UserManager = AppContainer.shared.userManager) {
+        self.programManager = programManager
+        self.userManager = userManager
         getProgramHistory()
     }
     
