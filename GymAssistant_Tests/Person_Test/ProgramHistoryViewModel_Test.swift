@@ -157,4 +157,79 @@ final class ProgramHistoryViewModel_Test: XCTestCase {
         XCTAssertEqual(sut.programHistory, [])
         XCTAssertNil(sut.alert)
     }
+    
+    @MainActor
+    func testProgramDeleteFailure() async {
+        //Given
+        let expectation = XCTestExpectation(description: "UserManager userInfo update")
+        let expectation2 = XCTestExpectation(description: "ProgramDelete should throw error")
+        do{
+            try await mockAuthManager.signUp(register: .mockRegister())
+        } catch {
+            XCTFail("SignUp should not throw error")
+        }
+        mockUserService.mockUserInfo = .userInfoMock()
+        mockUserManager.$userInfo
+            .dropFirst()
+            .sink { userInfo in
+                if userInfo != nil {
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &cancellables)
+        do{
+            try await mockUserManager.updateUserInfo(update: .userInfoMock())
+        } catch {
+            XCTFail("UserInfo should not throw error")
+        }
+        await fulfillment(of: [expectation], timeout: 1)
+        sut.alert = nil
+        sut.$alert
+            .dropFirst()
+            .sink { alert in
+                if alert != nil {
+                    expectation2.fulfill()
+                }
+            }
+            .store(in: &cancellables)
+        
+        //When
+        sut.programDelete(program: .baseProgram())
+        
+        //Then
+        await fulfillment(of: [expectation2], timeout: 1)
+        XCTAssertEqual(sut.alert?.subtitle, CustomError.customError(title: "Delete Error",
+                                                                    subtitle: "The program to be deleted could not be found.").subtitle)
+    }
+    
+    @MainActor
+    func testProgramDeleteUserNotFound() async {
+        //Given
+        let expectation = XCTestExpectation(description: "ProgramDelete should throw error")
+        sut.$alert
+            .dropFirst()
+            .sink { _ in
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        //When
+        sut.programDelete(program: .baseProgram())
+        
+        //Then
+        await fulfillment(of: [expectation], timeout: 1)
+        XCTAssertEqual(sut.alert?.subtitle, AppAuthError.userNotFound.subtitle)
+    }
+    
+    @MainActor
+    func testCancelTasksSuccess() {
+        //Given
+        XCTAssertEqual(sut.tasks.count, 1)
+        
+        //When
+        sut.cancelTasks()
+        
+        //Then
+        XCTAssertEqual(sut.tasks.count, 0)
+    }
 }

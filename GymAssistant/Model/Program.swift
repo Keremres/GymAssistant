@@ -181,10 +181,12 @@ extension Program{
                        week: [WeekModel.baseWeek()])
     }
     
-    static func mockProgram(programName: String = "3x5",
+    static func mockProgram(id: String = UUID().uuidString,
+                            programName: String = "3x5",
                             programClass: String = "Powerlifting",
                             week: [WeekModel] = [.baseWeek()]) -> Program {
-        Program(programName: programName,
+        Program(id: id,
+                programName: programName,
                 programClass: programClass,
                 week: week)
     }

@@ -9,25 +9,42 @@ import SwiftUI
 
 struct CreateSheet: View {
     @State var exercise:Exercises = .init(exercise: "")
+    @FocusState private var focusedField: FocusedField?
     @Binding var sheet: Bool
     var body: some View {
-        VStack{
-            Text("New Exercise")
-                .font(.largeTitle)
-            BaseTextField(textTitle: "Exercise Name",
-                          textField: $exercise.exercise)
-            BaseButton(onTab: {
-                Exercises.exerciseList.append(exercise)
-                withAnimation{
-                    sheet = false
+        ZStack{
+            Color.background
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .ignoresSafeArea(.all)
+                .onTapGesture {
+                    focusedField = nil
                 }
-            }, title: "Save")
-            .padding(.top, CGFloat(5))
-            .disabled(exercise.exercise.isEmpty)
+            
+            VStack{
+                Text(LocaleKeys.Create.newExercise.localized)
+                    .font(.largeTitle)
+                BaseTextField(textTitle: LocaleKeys.Create.exerciseName.localized,
+                              textField: $exercise.exercise)
+                .focused($focusedField, equals: .exerciseName)
+                BaseButton(onTab: {
+                    Exercises.exerciseList.append(exercise)
+                    withAnimation{
+                        sheet = false
+                    }
+                }, title: LocaleKeys.Dialog.save.localized)
+                .padding(.top, CGFloat(5))
+                .disabled(exercise.exercise.isEmpty)
+            }
         }
     }
 }
 
 #Preview {
     CreateSheet(sheet: .constant(false))
+}
+
+extension CreateSheet {
+    private enum FocusedField: Hashable {
+        case exerciseName
+    }
 }

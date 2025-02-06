@@ -15,8 +15,15 @@ struct BaseButton: View {
             onTab()
         }label:{
             HStack{
-                Text(title).foregroundColor(.tabBarText).font(.title2)
+                Text(title)
+                    .foregroundColor(.tabBarText)
+                    .font(.title2)
             }
-        }.tint(.tabBar).buttonStyle(.borderedProminent).buttonBorderShape(.roundedRectangle(radius: 10)).controlSize(.large).shadow(radius: 10)
+        }
+        .tint(.tabBar)
+        .buttonStyle(.borderedProminent)
+        .buttonBorderShape(.roundedRectangle(radius: 10))
+        .controlSize(.large)
+        .shadow(radius: 10)
     }
 }

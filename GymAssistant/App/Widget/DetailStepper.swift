@@ -11,9 +11,9 @@ struct DetailStepper: View {
     @Binding var exercise: Exercises
     var body: some View {
         GroupBox{
-            Stepper("Set: \(exercise.set)", value: $exercise.set, in: 0...20, step: 1)
-            Stepper("Again: \(exercise.again)", value: $exercise.again, in: 0...20, step: 1)
-            Stepper("Weight: \(exercise.weight, specifier: "%.2f")", value: $exercise.weight, in: 0...500, step: 1.25)
+            Stepper("\(LocaleKeys.Create.set.localized): \(exercise.set)", value: $exercise.set, in: 0...20, step: 1)
+            Stepper("\(LocaleKeys.Create.repeatText.localized): \(exercise.again)", value: $exercise.again, in: 0...20, step: 1)
+            Stepper("\(LocaleKeys.Create.weight.localized): \(exercise.weight, specifier: "%.2f")", value: $exercise.weight, in: 0...500, step: 1.25)
         }label: {
             NavigationLink(destination: ChartView(exercise: exercise)
                 .navigationBarBackButtonHidden(true)

@@ -9,9 +9,16 @@ import SwiftUI
 import Charts
 
 struct DetailView: View {
-    @StateObject private var viewModel: DetailViewModel = DetailViewModel()
+    @StateObject private var viewModel: DetailViewModel
     @State var dayModel: DayModel
     @Environment(\.dismiss) private var dismiss
+    
+    init(dayModel: DayModel,
+         programManager: ProgramManager = AppContainer.shared.programManager,
+         userManager: UserManager = AppContainer.shared.userManager) {
+        _viewModel = StateObject(wrappedValue: DetailViewModel(programManager: programManager, userManager: userManager))
+        self.dayModel = dayModel
+    }
     
     var body: some View {
         NavigationStack{
@@ -23,11 +30,12 @@ struct DetailView: View {
                 BaseButton(onTab: {
                     viewModel.saveDay(dayModel: dayModel)
                     dismiss()
-                }, title: DialogText.save)
+                }, title: LocaleKeys.Dialog.save.localized)
                 .padding(.top, 16)
             }
         }
-        .navigationTitle("\(dayModel.day)")
+        .navigationTitle(LocalizedStringKey(dayModel.day))
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar{
             ToolbarItem(placement: .topBarLeading) {
                 dismissButton
@@ -47,6 +55,10 @@ extension DetailView {
         Image(systemName: SystemImage.chevronLeft)
             .imageScale(.large)
             .bold()
+            .frame(width: 44, height: 44)
+            .background {
+                Color.background.opacity(0.0001)
+            }
             .onTapGesture {
                 withAnimation{
                     dismiss()

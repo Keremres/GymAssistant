@@ -49,8 +49,8 @@ struct AuthInfo: Codable, Sendable, Hashable, Identifiable, IdentifiableByString
         self.isAnonymous = isAnonymous
     }
     
-    static func authInfoMock() -> AuthInfo {
-        return AuthInfo(id: "mock", email: "mock@mock.com", photoUrl: nil, isAnonymous: false)
+    static func authInfoMock(id: String? = nil, email: String? = nil, photoUrl: String? = nil, isAnonymous: Bool? = nil) -> AuthInfo {
+        return AuthInfo(id: id ?? "mock", email: email ?? "test@example.com", photoUrl: photoUrl, isAnonymous: isAnonymous ?? false)
     }
     
     static func mockRegister(id: String = "mock" ,register: Register, photoUrl: String? = nil, isAnonymous: Bool = false) -> AuthInfo {

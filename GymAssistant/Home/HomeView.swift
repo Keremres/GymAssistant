@@ -9,14 +9,26 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject private var programManager: ProgramManager
-    @StateObject private var viewModel: HomeViewModel = HomeViewModel()
+    @StateObject private var viewModel: HomeViewModel
     @Binding var tabBarName: TabBarName
+    
+    init(tabBarName: Binding<TabBarName>,
+         healthManager: HealthProtocol = AppContainer.shared.healthManager,
+         programManager: ProgramManager = AppContainer.shared.programManager,
+         userManager: UserManager = AppContainer.shared.userManager) {
+        _viewModel = StateObject(wrappedValue: HomeViewModel(healthManager: healthManager, programManager: programManager, userManager: userManager))
+        _tabBarName = tabBarName
+    }
     
     var body: some View {
         NavigationStack {
             if programManager.program != nil {
                 ScrollView{
                     healthCard
+                        .background(Color.tabBarText.opacity(0.0001).ignoresSafeArea(.all))
+                        .onTapGesture {
+                            viewModel.showSheet.toggle()
+                        }
                     weekDays
                 }
                 .refreshable {
@@ -34,8 +46,15 @@ struct HomeView: View {
             }
         }
         .showAlert(alert: $viewModel.alert)
+        .sheet(isPresented: $viewModel.showSheet) {
+            GoalSettingView()
+                .presentationDetents([.fraction(0.3)])
+        }
         .onAppear{
             viewModel.newWeek()
+        }
+        .onChange(of: viewModel.goal) {
+            viewModel.setupGoals()
         }
     }
 }
@@ -51,35 +70,33 @@ extension HomeView{
     
     private var healthCard: some View{
         GroupBox{
-            if !viewModel.healthCard.isEmpty{
-                HStack{
-                    Spacer()
-                    VStack{
-                        Text("Step")
-                            .foregroundStyle(.blue)
-                        Text("Goal: 10000 / \(viewModel.healthCard[0])")
-                            .foregroundStyle(.blue)
-                        Text("Calories")
-                            .foregroundStyle(.red)
-                            .padding(.top, CGFloat(5))
-                        Text("Goal: 300 / \(viewModel.healthCard[1])")
-                            .foregroundStyle(.red)
-                    }
-                    .bold()
-                    Spacer(minLength: 0)
-                    ZStack{
-                        ProgressCircle(progress: $viewModel.healthCard[0],
-                                       goal: 10000,
-                                       color: .blue)
-                        ProgressCircle(progress: $viewModel.healthCard[1],
-                                       goal: 300,
-                                       color: .red)
-                        .padding(.all, CGFloat(10))
-                    }
-                    Spacer()
+            HStack{
+                Spacer()
+                VStack{
+                    Text(LocaleKeys.Home.step.localized)
+                        .foregroundStyle(.blue)
+                    Text(viewModel.goals.stepsGoal != 0 ? "\(LocaleKeys.Home.goal.localized): \(viewModel.goals.stepsGoal) / \(viewModel.goalsState.stepsGoal)" : LocaleKeys.Home.stepText.localized)
+                        .foregroundStyle(.blue)
+                    Text(LocaleKeys.Home.calories.localized)
+                        .foregroundStyle(.red)
+                        .padding(.top, CGFloat(5))
+                    Text(viewModel.goals.caloriesGoal != 0 ? "\(LocaleKeys.Home.goal.localized): \(viewModel.goals.caloriesGoal) / \(viewModel.goalsState.caloriesGoal)" : LocaleKeys.Home.caloriesText.localized)
+                        .foregroundStyle(.red)
                 }
-                .frame(height: CGFloat(100))
+                .bold()
+                Spacer(minLength: 0)
+                ZStack{
+                    ProgressCircle(progress: viewModel.goalsState.stepsGoal,
+                                   goal: viewModel.goals.stepsGoal,
+                                   color: .blue)
+                    ProgressCircle(progress: viewModel.goalsState.caloriesGoal,
+                                   goal: viewModel.goals.caloriesGoal,
+                                   color: .red)
+                    .padding(.all, CGFloat(10))
+                }
+                Spacer()
             }
+            .frame(height: CGFloat(100))
         }label: {
             HStack{
                 Spacer()
@@ -108,17 +125,17 @@ extension HomeView{
     
     private var emptyProgram: some View {
         ContentUnavailableView(label: {
-            Label("No Program Found", systemImage: SystemImage.trayFill)
-        }, description: {Text("If you do not have a program, you can create or select a new program.")}, actions: {
+            Label(LocaleKeys.Home.emptyHome.localized, systemImage: SystemImage.trayFill)
+        }, description: {Text(LocaleKeys.Home.emptyHomeText.localized)}, actions: {
             HStack{
                 BaseNavigationLink(destination: CreateView()
-                    .navigationBarBackButtonHidden(true), title: "Create")
+                    .navigationBarBackButtonHidden(true), title: LocaleKeys.Home.create.localized)
                 .padding(.horizontal,5)
                 BaseButton(onTab: {
                     withAnimation(.spring()){
                         tabBarName = .Search
                     }
-                }, title: "Select")
+                }, title: LocaleKeys.Home.select.localized)
             }
         })
         .padding(.top, UIScreen.main.bounds.height * 0.322)

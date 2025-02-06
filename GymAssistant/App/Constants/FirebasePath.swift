@@ -11,4 +11,5 @@ enum FirebasePath {
     static let users = "users"
     static let programs = "programs"
     static let program = "program"
+    static let test = "test"
 }

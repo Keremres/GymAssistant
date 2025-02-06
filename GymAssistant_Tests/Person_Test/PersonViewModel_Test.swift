@@ -86,7 +86,7 @@ final class PersonViewModel_Test: XCTestCase {
     }
     
     @MainActor
-    func testSignOutFailure() async {
+    func testSignOutFailure() {
         // Given
         
         //When
@@ -166,6 +166,44 @@ final class PersonViewModel_Test: XCTestCase {
     }
     
     @MainActor
+    func testProgramOutUserNotFound() async {
+        //Given
+        let expectation = XCTestExpectation(description: "UserManager should update user info")
+        let expectation2 = XCTestExpectation(description: "Alert should show")
+        do{
+            try await mockAuthManager.signUp(register: .mockRegister())
+        } catch {
+            XCTFail("SignUp should not throw error")
+        }
+        mockUserService.mockUserInfo = .userInfoMock()
+        mockUserManager.$userInfo
+            .dropFirst()
+            .sink { _ in
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        do{
+            try await mockUserManager.updateUserInfo(update: .userInfoMock())
+        } catch {
+            XCTFail("UpdateUserInfo should not throw error")
+        }
+        await fulfillment(of: [expectation], timeout: 1)
+        sut.$alert
+            .dropFirst()
+            .sink { _ in
+                expectation2.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        //When
+        sut.programOut()
+        
+        //Then
+        await fulfillment(of: [expectation2], timeout: 1)
+        XCTAssertEqual(sut.alert?.subtitle, AppAuthError.userNotFound.subtitle)
+    }
+    
+    @MainActor
     func testDeleteAccountSuccess() async {
         // Given
         let expectation = XCTestExpectation(description: "UserManager should update user info")
@@ -207,5 +245,24 @@ final class PersonViewModel_Test: XCTestCase {
         XCTAssertNil(mockUserManager.userInfo)
         XCTAssertNil(mockAuthManager.authInfo)
         XCTAssertNil(sut.alert)
+    }
+    
+    @MainActor
+    func testDeleteAccountFailure() async {
+        //Given
+        let expectation = XCTestExpectation(description: "DeleteAccount should throw error")
+        sut.$alert
+            .dropFirst()
+            .sink { _ in
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        //When
+        sut.deleteAccount()
+        
+        //Then
+        await fulfillment(of: [expectation], timeout: 1)
+        XCTAssertEqual(sut.alert?.subtitle, AppAuthError.userNotFound.subtitle)
     }
 }

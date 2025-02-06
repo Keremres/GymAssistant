@@ -8,13 +8,17 @@
 import Foundation
 import HealthKit
 
-final class HealthManager{
-    
-    static let shared = HealthManager()
-    let healthStore = HKHealthStore()
+protocol HealthProtocol{
+    func requestHealthKitAccess() async throws
+    func fetchTodaySteps(completion: @escaping(Int) -> Void)
+    func fetchDailySteps(startDate: Date, completion: @escaping([DailyStepModel]) -> Void)
+    func fetchTodayCalories(completion: @escaping(Int) -> Void)
+}
+
+final class HealthManager: HealthProtocol{
+    private let healthStore = HKHealthStore()
     
     init(){
-        
         Task{
             do{
                 try await requestHealthKitAccess()

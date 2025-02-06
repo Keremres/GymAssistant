@@ -24,7 +24,9 @@ struct BaseNavigationLink<Label: View, Destination: View>: View {
                 if let label = label {
                     label()
                 }
-                Text(title).foregroundColor(.tabBarText).font(.title2)
+                Text(title)
+                    .foregroundColor(.tabBarText)
+                    .font(.title2)
             }
         }
         .tint(.tabBar)

@@ -19,6 +19,7 @@ struct ChartView: View {
             chart
         }
         .navigationTitle("\(exercise.exercise)")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar{
             ToolbarItem(placement: .topBarLeading) {
                 dismissButton
@@ -41,12 +42,12 @@ extension ChartView {
             ForEach(programManager.chartCalculator(exerciseId: exercise.id), id: \.self) { chartData in
                 if (programManager.program?.week.count != 1){
                     LineMark(
-                        x: .value("Date", chartData.date, unit: .day),
-                        y: .value("Weight", chartData.value)
+                        x: .value(LocaleKeys.Home.date.localized, chartData.date, unit: .day),
+                        y: .value(LocaleKeys.Home.weight.localized, chartData.value)
                     )
                     .interpolationMethod(.catmullRom)
                     if let rawSelectedDate{
-                        RuleMark(x: .value("Selected Date", rawSelectedDate, unit: .day))
+                        RuleMark(x: .value(LocaleKeys.Home.selectDate.localized, rawSelectedDate, unit: .day))
                             .foregroundStyle(.gray.opacity(0.3))
                             .zIndex(-1)
                             .annotation(position: .top, spacing: 5, overflowResolution: .init(x: .fit(to: .chart), y: .disabled)){
@@ -55,11 +56,11 @@ extension ChartView {
                     }
                 }else{
                     PointMark(
-                        x: .value("Date", chartData.date, unit: .day),
-                        y: .value("Weight", chartData.value)
+                        x: .value(LocaleKeys.Home.date.localized, chartData.date, unit: .day),
+                        y: .value(LocaleKeys.Home.date.localized, chartData.value)
                     )
                     if let rawSelectedDate{
-                        RuleMark(x: .value("Selected Date", rawSelectedDate, unit: .day))
+                        RuleMark(x: .value(LocaleKeys.Home.selectDate.localized, rawSelectedDate, unit: .day))
                             .foregroundStyle(.gray.opacity(0.3))
                             .zIndex(-1)
                             .annotation(position: .top, spacing: 5, overflowResolution: .init(x: .fit(to: .chart), y: .disabled)){
@@ -79,8 +80,8 @@ extension ChartView {
         if let rawSelectedDate,
            let selectedData = programManager.chartCalculator(exerciseId: exercise.id).first(where: { Calendar.current.isDate($0.date, inSameDayAs: rawSelectedDate) }) {
             VStack {
-                Text("Date: \(selectedData.date.formatted())")
-                Text("Weight: \(selectedData.value, specifier: "%.2f") kg")
+                Text("\(LocaleKeys.Home.date.localized): \(selectedData.date.formatted())")
+                Text("\(LocaleKeys.Home.date.localized): \(selectedData.value, specifier: "%.2f") kg")
             }
             .padding()
             .foregroundStyle(.tabBar)
@@ -94,6 +95,10 @@ extension ChartView {
         Image(systemName: SystemImage.chevronLeft)
             .imageScale(.large)
             .bold()
+            .frame(width: 44, height: 44)
+            .background {
+                Color.background.opacity(0.0001)
+            }
             .onTapGesture {
                 withAnimation{
                     dismiss()

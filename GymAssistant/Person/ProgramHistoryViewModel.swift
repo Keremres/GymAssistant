@@ -13,7 +13,7 @@ final class ProgramHistoryViewModel: ObservableObject{
     private let programManager: ProgramManager
     private let userManager: UserManager
     
-    private var tasks: [Task<Void, Never>] = []
+    private(set) var tasks: [Task<Void, Never>] = []
     
     @Published var programHistory: [Program] = []
     

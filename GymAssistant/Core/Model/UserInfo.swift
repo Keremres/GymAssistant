@@ -65,7 +65,7 @@ struct UserInfo: Codable, Sendable, Hashable, Identifiable, IdentifiableByString
         self.photoURL = photoURL ?? userInfo.photoURL
         self.creationDate = userInfo.creationDate
         self.lastLoginDate = lastLoginDate ?? userInfo.lastLoginDate
-        self.programId = programId ?? userInfo.programId
+        self.programId = programId == "" ? nil : programId ?? userInfo.programId
     }
     
     init(from decoder: Decoder) throws {
@@ -104,7 +104,7 @@ struct UserInfo: Codable, Sendable, Hashable, Identifiable, IdentifiableByString
         case programId = "program_id"
     }
     
-    static func userInfoMock(programId: String? = nil) -> UserInfo {
-        return UserInfo(authInfo: .authInfoMock(), programId: programId)
+    static func userInfoMock(id: String? = nil, email: String? = nil, photoUrl: String? = nil, isAnonymous: Bool? = nil, title: String? = nil, creationDate: Date? = nil, lastLoginDate: Date? = nil, programId: String? = nil) -> UserInfo {
+        return UserInfo(authInfo: .authInfoMock(id: id, email: email, photoUrl: photoUrl, isAnonymous: isAnonymous), title: title, creationDate: creationDate, lastLoginDate: lastLoginDate, programId: programId)
     }
 }

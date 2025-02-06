@@ -34,7 +34,7 @@ struct DayGroupBox: View {
                 }
             }
         }label: {
-            Text("\(dayModel.day)").foregroundStyle(.pink)
+            Text(LocalizedStringKey(dayModel.day)).foregroundStyle(.pink)
         }
     }
 }

@@ -21,14 +21,14 @@ final class RegisterViewModel_Test: XCTestCase {
         self.mockAuthService = MockAuthService()
         self.mockAuthManager = AuthManager(service: mockAuthService)
         self.cancellables = Set<AnyCancellable>()
-        sut = RegisterViewModel(authManager: mockAuthManager)
+        self.sut = RegisterViewModel(authManager: mockAuthManager)
     }
     
     override func tearDown() {
-        sut = nil
-        mockAuthService = nil
-        mockAuthManager = nil
-        cancellables = nil
+        self.sut = nil
+        self.mockAuthService = nil
+        self.mockAuthManager = nil
+        self.cancellables = nil
         super.tearDown()
     }
     
@@ -39,6 +39,7 @@ final class RegisterViewModel_Test: XCTestCase {
         sut.register = register
         let expectation = XCTestExpectation(description: "Create User")
         mockAuthManager.$authInfo
+            .dropFirst()
             .sink { _ in
                 expectation.fulfill()
             }

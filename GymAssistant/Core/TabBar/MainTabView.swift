@@ -26,6 +26,7 @@ struct MainTabView: View {
             }
             tabButton
         }
+        .ignoresSafeArea(.keyboard)
         .navigationBarBackButtonHidden(true)
     }
 }
@@ -41,15 +42,15 @@ extension MainTabView {
     
     private var tabButton: some View {
         HStack(spacing: 0){
-            TabButton(title: TabBarName.Home, image: TabBarImage.Home, selected: $viewModel.currentTab)
+            TabButton(title: TabBarName.Home, titleText: LocaleKeys.Tab.home.localized, image: TabBarImage.Home, selected: $viewModel.currentTab)
             Spacer(minLength: 0)
-            TabButton(title: TabBarName.Search, image: TabBarImage.Search, selected: $viewModel.currentTab)
+            TabButton(title: TabBarName.Search, titleText: LocaleKeys.Tab.search.localized, image: TabBarImage.Search, selected: $viewModel.currentTab)
             Spacer(minLength: 0)
-            TabButton(title: TabBarName.Person, image: TabBarImage.Person, selected: $viewModel.currentTab)
+            TabButton(title: TabBarName.Person, titleText: LocaleKeys.Tab.person.localized, image: TabBarImage.Person, selected: $viewModel.currentTab)
         }
         .padding(.vertical, 5)
         .padding(.horizontal, 5)
         .background(Color.tabBarText.clipShape(Capsule()))
-        .frame(width: 250)
+        .frame(width: 270)
     }
 }

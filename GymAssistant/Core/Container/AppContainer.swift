@@ -47,6 +47,13 @@ final class AppContainer {
         return instance
     }
     
+    var healthManager: HealthManager {
+        guard let instance = container.resolve(HealthManager.self) else {
+            fatalError("HealthManager is not registered")
+        }
+        return instance
+    }
+    
     /// Registers dependencies within the `AppContainer` to ensure that each service and manager has a single, shared instance throughout the app.
     ///
     /// The `.inObjectScope(.container)` setting ensures that each manager returns the same instance whenever resolved, preventing multiple instances of the same manager.
@@ -55,6 +62,8 @@ final class AppContainer {
         container.register(FirebaseAuthService.self){ _ in FirebaseAuthService()}
         container.register(FirebaseUserService.self){ _ in FirebaseUserService()}
         container.register(FirebaseProgramService.self){ _ in FirebaseProgramService()}
+        container.register(HealthManager.self) { _ in HealthManager()}
+            .inObjectScope(.container)
         
         // Register AuthManager with FirebaseAuthService
         // `AuthManager` is scoped to `.container` to ensure only one instance is ever created and shared

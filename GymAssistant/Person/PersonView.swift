@@ -9,7 +9,13 @@ import SwiftUI
 
 struct PersonView: View {
     @EnvironmentObject private var userManager: UserManager
-    @StateObject private var viewModel: PersonViewModel = PersonViewModel()
+    @StateObject private var viewModel: PersonViewModel
+    
+    init(authManager: AuthManager = AppContainer.shared.authManager,
+         userManager: UserManager = AppContainer.shared.userManager,
+         programManager: ProgramManager = AppContainer.shared.programManager) {
+        _viewModel = StateObject(wrappedValue: PersonViewModel(authManager: authManager, userManager: userManager, programManager: programManager))
+    }
     
     var body: some View {
         NavigationStack{
@@ -32,7 +38,7 @@ struct PersonView: View {
 
 extension PersonView {
     private var accountSection: some View {
-        Section("ACCOUNT"){
+        Section(LocaleKeys.Person.account.localized){
             if let userInfo = userManager.userInfo{
                 HStack{
                     Text(userInfo.initials)
@@ -75,33 +81,33 @@ extension PersonView {
     }
     
     private var programSection: some View {
-        Section("Program"){
+        Section(LocaleKeys.Person.program.localized){
             NavigationLink {
                 ProgramHistoryView()
                     .navigationBarBackButtonHidden(true)
             } label: {
-                Label("Progarm history", systemImage: SystemImage.clock)
+                Label(LocaleKeys.Person.programHistory.localized, systemImage: SystemImage.clock)
                     .foregroundStyle(.tabBar)
             }
             
-            Label(DialogText.programOut, systemImage: SystemImage.trashFill)
+            Label(LocaleKeys.Dialog.programOut.localized, systemImage: SystemImage.trashFill)
                 .foregroundStyle(.red)
                 .onTapGesture {
                     viewModel.programOutDialog.toggle()
                 }
-                .confirmationDialog(DialogText.programOut, isPresented: $viewModel.programOutDialog, titleVisibility: .visible){
-                    Button(DialogText.cancel, role: .cancel, action: {})
-                    Button(DialogText.programOut, role: .destructive, action: {
+                .confirmationDialog(LocaleKeys.Dialog.programOut.localized, isPresented: $viewModel.programOutDialog, titleVisibility: .visible){
+                    Button(LocaleKeys.Dialog.cancel.localized, role: .cancel, action: {})
+                    Button(LocaleKeys.Dialog.programOut.localized, role: .destructive, action: {
                         viewModel.programOut()
                     })
                 } message: {
-                    Text(DialogText.programOutText)
+                    Text(LocaleKeys.Dialog.programOutText.localized)
                 }
         }
     }
     
     private var outSection: some View {
-        Section("Out"){
+        Section(LocaleKeys.Person.out.localized){
             deleteAccountButton
             signOutButton
         }
@@ -110,40 +116,40 @@ extension PersonView {
     private var deleteAccountButton: some View {
         HStack{
             Image(systemName: SystemImage.trashFill)
-            Text(DialogText.deleteAccount)
+            Text(LocaleKeys.Dialog.deleteAccount.localized)
         }
         .font(.system(size: 20))
         .foregroundStyle(.red)
         .onLongPressGesture {
             viewModel.deleteAccountDialog.toggle()
         }
-        .confirmationDialog(DialogText.deleteAccount, isPresented: $viewModel.deleteAccountDialog, titleVisibility: .visible){
-            Button(DialogText.cancel, role: .cancel, action: {})
-            Button(DialogText.deleteAccount, role: .destructive, action: {
+        .confirmationDialog(LocaleKeys.Dialog.deleteAccount.localized, isPresented: $viewModel.deleteAccountDialog, titleVisibility: .visible){
+            Button(LocaleKeys.Dialog.cancel.localized, role: .cancel, action: {})
+            Button(LocaleKeys.Dialog.deleteAccount.localized, role: .destructive, action: {
                 viewModel.deleteAccount()
             })
         } message: {
-            Text(DialogText.deleteAccountText)
+            Text(LocaleKeys.Dialog.deleteAccountText.localized)
         }
     }
     
     private var signOutButton: some View {
         HStack{
             Image(systemName: SystemImage.arrowLeftCircleFill)
-            Text(DialogText.signOut)
+            Text(LocaleKeys.Dialog.signOut.localized)
         }
         .font(.system(size: 20))
         .foregroundStyle(.red)
         .onTapGesture {
             viewModel.signOutDialog.toggle()
         }
-        .confirmationDialog(DialogText.signOut, isPresented: $viewModel.signOutDialog, titleVisibility: .visible){
-            Button(DialogText.cancel, role: .cancel, action: {})
-            Button(DialogText.signOut, role: .destructive, action: {
+        .confirmationDialog(LocaleKeys.Dialog.signOut.localized, isPresented: $viewModel.signOutDialog, titleVisibility: .visible){
+            Button(LocaleKeys.Dialog.cancel.localized, role: .cancel, action: {})
+            Button(LocaleKeys.Dialog.signOut.localized, role: .destructive, action: {
                 viewModel.signOut()
             })
         } message: {
-            Text(DialogText.signOutText)
+            Text(LocaleKeys.Dialog.signOutText.localized)
         }
     }
 }

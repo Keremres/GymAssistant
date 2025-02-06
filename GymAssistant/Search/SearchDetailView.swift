@@ -17,24 +17,26 @@ struct SearchDetailView: View {
             ScrollView{
                 programWeekDays
                 BaseButton(onTab: {searchViewModel.showDialog.toggle()},
-                           title: DialogText.useProgram)
+                           title: LocaleKeys.Dialog.useProgram.localized)
                 .padding(.top, 16)
-                .confirmationDialog(DialogText.useProgram, isPresented: $searchViewModel.showDialog, titleVisibility: .visible){
-                    Button(DialogText.cancel, role: .cancel, action: {})
-                    Button(DialogText.useProgram, action: {
+                .confirmationDialog(LocaleKeys.Dialog.useProgram.localized, isPresented: $searchViewModel.showDialog, titleVisibility: .visible){
+                    Button(LocaleKeys.Dialog.cancel.localized, role: .cancel, action: {})
+                    Button(LocaleKeys.Dialog.useProgram.localized, action: {
                         searchViewModel.useProgram(program: program)
                         dismiss()
                     })
                 } message: {
-                    Text(DialogText.areYouSure)
+                    Text(LocaleKeys.Dialog.areYouSure.localized)
                 }
             }
-        }.navigationTitle(program.programName)
-            .toolbar{
-                ToolbarItem(placement: .topBarLeading) {
-                    dismissButton
-                }
+        }
+        .navigationTitle(program.programName)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar{
+            ToolbarItem(placement: .topBarLeading) {
+                dismissButton
             }
+        }
     }
 }
 
@@ -56,6 +58,10 @@ extension SearchDetailView {
         Image(systemName: SystemImage.chevronLeft)
             .imageScale(.large)
             .bold()
+            .frame(width: 44, height: 44)
+            .background {
+                Color.background.opacity(0.0001)
+            }
             .onTapGesture {
                 withAnimation{
                     dismiss()

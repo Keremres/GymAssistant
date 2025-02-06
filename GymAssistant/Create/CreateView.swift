@@ -9,18 +9,37 @@ import SwiftUI
 
 struct CreateView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var viewModel: CreateViewModel = CreateViewModel()
+    @StateObject private var viewModel: CreateViewModel
+    @FocusState private var focusedField: FocusedField?
+    
+    init(programManager: ProgramManager = AppContainer.shared.programManager,
+         userManager: UserManager = AppContainer.shared.userManager) {
+        _viewModel = StateObject(wrappedValue: CreateViewModel(programManager: programManager, userManager: userManager))
+    }
     
     var body: some View {
         NavigationStack{
-            List{
-                createTopContent
-                creatingDay
-                saveButton
+            ZStack{
+                Color.background
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .ignoresSafeArea(.all)
+                    .onTapGesture {
+                        focusedField = nil
+                    }
+                
+                List{
+                    createTopContent
+                        .listSectionSeparator(.hidden)
+                    creatingDay
+                        .listSectionSeparator(.hidden)
+                    saveButton
+                        .listRowSeparator(.hidden)
+                }
+                .listStyle(.plain)
             }
-            .listStyle(PlainListStyle())
         }
-        .navigationTitle(CreateText.createTitle)
+        .navigationTitle(LocaleKeys.Create.createTitle.localized)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar{
             ToolbarItem(placement: .topBarLeading) {
                 dismissButton
@@ -41,9 +60,10 @@ struct CreateView: View {
 extension CreateView {
     private var createTopContent: some View {
         Section{
-            BaseTextField(textTitle: CreateText.programName,
+            BaseTextField(textTitle: LocaleKeys.Create.programName.localized,
                           textField: $viewModel.program.programName)
-            Picker("\(CreateText.chooseClass): \(viewModel.program.programClass)",
+            .focused($focusedField, equals: .programName)
+            Picker("\(LocaleKeys.Create.chooseClass.localized): \(viewModel.program.programClass)",
                    systemImage: SystemImage.figureRunSquareStackFill,
                    selection: $viewModel.program.programClass){
                 ForEach(ProgramClass.programClass, id: \.self){ className in
@@ -52,6 +72,10 @@ extension CreateView {
             }
                    .foregroundStyle(.red)
         }
+        .listRowBackground(Color.background.onTapGesture {
+            focusedField = nil
+        })
+        .listRowSeparator(.hidden)
     }
     
     private var creatingDay: some View {
@@ -60,6 +84,7 @@ extension CreateView {
                 .environmentObject(viewModel)
                 .navigationBarBackButtonHidden(true)){
                     dayCard(day: viewModel.program.week[0].day[index])
+                        .listSectionSeparator(.hidden)
                 }
                 .swipeActions{
                     if viewModel.program.week[0].day.count > 1{
@@ -68,18 +93,21 @@ extension CreateView {
                                 viewModel.deleteDay(id: viewModel.program.week[0].day[index].id)
                             }
                         } label: {
-                            Label(CreateText.delete, systemImage: SystemImage.trash)
+                            Label(LocaleKeys.Create.delete.localized, systemImage: SystemImage.trash)
                                 .symbolVariant(.fill)
                         }
                     }
                 }
         }
+        .listRowBackground(Color.background.onTapGesture {
+            focusedField = nil
+        })
     }
     
     private func dayCard(day: DayModel) -> some View {
         Section{
             VStack(alignment: .leading){
-                Text(day.day)
+                Text(LocalizedStringKey(day.day))
                     .bold()
                     .foregroundStyle(.red)
                 ForEach(day.exercises.indices, id: \.self){ index in
@@ -97,33 +125,38 @@ extension CreateView {
         Section{
             HStack{
                 Spacer()
-                Text(DialogText.save)
-                    .font(.system(size: 22))
-                    .onTapGesture {
-                        viewModel.showDialog.toggle()
-                    }
-                    .confirmationDialog(DialogText.save, isPresented: $viewModel.showDialog, titleVisibility: .visible){
-                        Button(DialogText.cancel, role: .cancel, action: {})
-                        Button(DialogText.save, action: {
-                            viewModel.create()
-                            dismiss()
-                        })
-                        Button(DialogText.publish, action: {
-                            viewModel.publishProgram()
-                            dismiss()
-                        })
-                    } message: {
-                        Text(DialogText.areYouSure)
-                    }
+                BaseButton(onTab: {
+                    viewModel.showDialog.toggle()
+                }, title: LocaleKeys.Dialog.save.localized)
+                .confirmationDialog(LocaleKeys.Dialog.save.localized, isPresented: $viewModel.showDialog, titleVisibility: .visible){
+                    Button(LocaleKeys.Dialog.cancel.localized, role: .cancel, action: {})
+                    Button(LocaleKeys.Dialog.save.localized, action: {
+                        viewModel.create()
+                        dismiss()
+                    })
+                    Button(LocaleKeys.Dialog.publish.localized, action: {
+                        viewModel.publishProgram()
+                        dismiss()
+                    })
+                } message: {
+                    Text(LocaleKeys.Dialog.areYouSure.localized)
+                }
                 Spacer()
             }
         }
+        .listRowBackground(Color.background.onTapGesture {
+            focusedField = nil
+        })
     }
     
     private var dismissButton: some View {
         Image(systemName: SystemImage.chevronLeft)
             .imageScale(.large)
             .bold()
+            .frame(width: 44, height: 44)
+            .background {
+                Color.background.opacity(0.0001)
+            }
             .onTapGesture {
                 withAnimation{
                     dismiss()
@@ -140,5 +173,11 @@ extension CreateView {
                     viewModel.addDay()
                 }
             }
+    }
+}
+
+extension CreateView {
+    private enum FocusedField: Hashable {
+        case programName
     }
 }

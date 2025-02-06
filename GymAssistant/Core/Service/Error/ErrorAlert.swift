@@ -64,7 +64,7 @@ extension ErrorAlert{
     static func getButtonsForAlert() -> some View {
         switch self {
         default:
-            Button("Cancel", role: .cancel, action: {})
+            Button(LocaleKeys.Dialog.cancel.localized, role: .cancel, action: {})
         }
     }
 }

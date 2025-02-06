@@ -19,7 +19,7 @@ final class SearchViewModel: ObservableObject{
     @Published var alert: CustomError? = nil
     @Published var showDialog: Bool = false
     
-    private var tasks: [Task<Void, Never>] = []
+    private(set) var tasks: [Task<Void, Never>] = []
     
     init(programManager: ProgramManager = AppContainer.shared.programManager,
          userManager: UserManager = AppContainer.shared.userManager){

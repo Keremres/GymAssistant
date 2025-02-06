@@ -9,7 +9,12 @@ import SwiftUI
 
 struct ProgramHistoryView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var viewModel: ProgramHistoryViewModel = ProgramHistoryViewModel()
+    @StateObject private var viewModel: ProgramHistoryViewModel
+    
+    init(programManager: ProgramManager = AppContainer.shared.programManager,
+         userManager: UserManager = AppContainer.shared.userManager) {
+        _viewModel = StateObject(wrappedValue: ProgramHistoryViewModel(programManager: programManager, userManager: userManager))
+    }
     
     var body: some View {
         NavigationStack {
@@ -46,7 +51,7 @@ extension ProgramHistoryView {
                         Button(role: .destructive) {
                                 viewModel.programDelete(program: program)
                         } label: {
-                            Label("Delete", systemImage: SystemImage.trash)
+                            Label(LocaleKeys.Person.delete.localized, systemImage: SystemImage.trash)
                                 .symbolVariant(.fill)
                         }
                     }
@@ -58,10 +63,10 @@ extension ProgramHistoryView {
     private var emptyHistory: some View {
         ContentUnavailableView(
             label: {
-                Label("No Program History Found", systemImage: SystemImage.trayFill)
+                Label(LocaleKeys.Person.empty.localized, systemImage: SystemImage.trayFill)
             },
             description: {
-                Text("You don't have any program history")
+                Text(LocaleKeys.Person.emptyText.localized)
             }
         )
     }
@@ -70,6 +75,10 @@ extension ProgramHistoryView {
         Image(systemName: SystemImage.chevronLeft)
             .imageScale(.large)
             .bold()
+            .frame(width: 44, height: 44)
+            .background {
+                Color.background.opacity(0.0001)
+            }
             .onTapGesture {
                 withAnimation{
                     dismiss()

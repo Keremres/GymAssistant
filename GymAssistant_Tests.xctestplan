@@ -1,0 +1,33 @@
+{
+  "configurations" : [
+    {
+      "id" : "F3323293-D2B3-4A1C-A091-D7739576FDCF",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:GymAssistant.xcodeproj",
+          "identifier" : "034462D32C55314C00F588E6",
+          "name" : "GymAssistant"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:GymAssistant.xcodeproj",
+        "identifier" : "032625C72CDA5DCF00BF5332",
+        "name" : "GymAssistant_Tests"
+      }
+    }
+  ],
+  "version" : 1
+}

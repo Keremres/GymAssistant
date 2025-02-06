@@ -21,7 +21,7 @@ struct CreateDayExercise: View {
             }
             .listStyle(PlainListStyle())
         }
-        .navigationBarTitle(CreateText.createDayTitle)
+        .navigationBarTitle(LocaleKeys.Create.createDayTitle.localized)
         .toolbar{
             ToolbarItem(placement: .topBarLeading) {
                 dismissButton
@@ -54,7 +54,7 @@ extension CreateDayExercise {
                         Spacer(minLength: 10)
                         HStack{
                             Image(systemName: SystemImage.plusApp)
-                            Text(CreateText.new)
+                            Text(LocaleKeys.Create.new.localized)
                         }
                         .font(.title3)
                         .foregroundStyle(.red)
@@ -74,7 +74,7 @@ extension CreateDayExercise {
                                                        idDayModel: createViewModel.program.week[0].day[dayIndex].id)
                     }
                 } label: {
-                    Label(CreateText.delete, systemImage: SystemImage.trash)
+                    Label(LocaleKeys.Create.delete.localized, systemImage: SystemImage.trash)
                         .symbolVariant(.fill)
                 }
             }
@@ -82,9 +82,9 @@ extension CreateDayExercise {
     }
     
     private var selectDay: some View {
-        Picker("\(CreateText.chooseDay): \(createViewModel.program.week[0].day[dayIndex].day)", systemImage: SystemImage.calendar, selection: $createViewModel.program.week[0].day[dayIndex].day){
+        Picker("\(LocaleKeys.Create.chooseDay.localized): \(createViewModel.program.week[0].day[dayIndex].day)", systemImage: SystemImage.calendar, selection: $createViewModel.program.week[0].day[dayIndex].day){
             ForEach(Weekday.weekday, id: \.self){ day in
-                Text(day)
+                Text(LocalizedStringKey(day))
             }
         }
         .foregroundColor(.red)
@@ -92,19 +92,19 @@ extension CreateDayExercise {
     
     private func stepperViews(for exercise: Binding<Exercises>) -> some View {
         VStack {
-            Stepper("\(CreateText.set): \(exercise.set.wrappedValue)",
+            Stepper("\(LocaleKeys.Create.set.localized): \(exercise.set.wrappedValue)",
                     value: exercise.set,
                     in: 0...20,
                     step: 1)
-            Stepper("\(CreateText.repeatText): \(exercise.againStart.wrappedValue)",
+            Stepper("\(LocaleKeys.Create.repeatText.localized): \(exercise.againStart.wrappedValue)",
                     value: exercise.againStart,
                     in: 0...20,
                     step: 1)
-            Stepper("\(CreateText.repeatInterval): \(exercise.againEnd.wrappedValue)",
+            Stepper("\(LocaleKeys.Create.repeatInterval.localized): \(exercise.againEnd.wrappedValue)",
                     value: exercise.againEnd,
                     in: 0...20,
                     step: 1)
-            Stepper("\(CreateText.weight): \(exercise.weight.wrappedValue, specifier: "%.2f")",
+            Stepper("\(LocaleKeys.Create.weight.localized): \(exercise.weight.wrappedValue, specifier: "%.2f")",
                     value: exercise.weight,
                     in: 0...500,
                     step: 1)
@@ -115,6 +115,10 @@ extension CreateDayExercise {
         Image(systemName: SystemImage.chevronLeft)
             .imageScale(.large)
             .bold()
+            .frame(width: 44, height: 44)
+            .background {
+                Color.background.opacity(0.0001)
+            }
             .onTapGesture {
                 withAnimation{
                     dismiss()

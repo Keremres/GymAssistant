@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct TabButton: View {
-    var title : TabBarName
-    var image : TabBarImage
+    let title : TabBarName
+    let titleText: String
+    let image : TabBarImage
     
     @Binding var selected : TabBarName
     
@@ -25,7 +26,7 @@ struct TabButton: View {
                     .foregroundStyle(.tabBar)
                     .frame(width: 25,height: 25)
                 if selected == title{
-                    Text(title.rawValue)
+                    Text(titleText)
                         .bold()
                         .tint(.tabBar)
                         .lineLimit(1)

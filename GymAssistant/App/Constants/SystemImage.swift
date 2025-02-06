@@ -19,4 +19,6 @@ enum SystemImage {
     static let dumbbellFill = "dumbbell.fill"
     static let calendar = "calendar"
     static let clock = "clock"
+    static let flame = "flame"
+    static let figureWalk = "figure.walk"
 }

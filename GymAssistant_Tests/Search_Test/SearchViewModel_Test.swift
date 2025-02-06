@@ -150,6 +150,65 @@ final class SearchViewModel_Test: XCTestCase {
         await fulfillment(of: [expectation3], timeout: 1)
         XCTAssertNotNil(mockProgramManager.program)
         XCTAssertEqual(mockProgramManager.program?.id, mockProgram.id)
+        XCTAssertNotEqual(mockProgramManager.program?.week[0].date, mockProgram.week[0].date)
         XCTAssertNil(sut.alert)
+    }
+    
+    @MainActor
+    func testGetAllProgramsFailure() async {
+        //Given
+        sut.alert = nil
+        let expectation = XCTestExpectation(description: "GetAllPrograms should throw error")
+        sut.$alert
+            .sink { alert in
+                if alert != nil {
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &cancellables)
+        
+        //When
+        sut.getAllPrograms()
+        
+        //Then
+        await fulfillment(of: [expectation], timeout: 1)
+        XCTAssertEqual(sut.alert?.subtitle, CustomError.customError(title: "Program not found",subtitle: "Program not found.").subtitle)
+    }
+    
+    @MainActor
+    func testUseProgramFailure() async {
+        //Given
+        let expectation = XCTestExpectation(description: "UseProgram should throw error")
+        let expectation2 = XCTestExpectation(description: "Alert is awaited")
+        sut.alert = nil
+        sut.$alert
+            .dropFirst()
+            .sink { alert in
+                expectation2.fulfill()
+                if alert != nil {
+                    expectation.fulfill()
+                }
+            }
+            .store(in: &cancellables)
+        await fulfillment(of: [expectation2], timeout: 1)
+        
+        //When
+        sut.useProgram(program: .baseProgram())
+        
+        //Then
+        await fulfillment(of: [expectation], timeout: 1)
+        XCTAssertEqual(sut.alert?.subtitle, AppAuthError.userNotFound.subtitle)
+    }
+    
+    @MainActor
+    func testCancelTasksSuccess() async {
+        //Given
+        XCTAssertEqual(sut.tasks.count, 1)
+        
+        //When
+        sut.cancelTasks()
+        
+        //Then
+        XCTAssertEqual(sut.tasks.count, 0)
     }
 }

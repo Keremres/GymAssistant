@@ -202,5 +202,26 @@ final class CreateViewModel_Test: XCTestCase {
         //Then
         await fulfillment(of: [expectation], timeout: 1)
         XCTAssertNotNil(mockProgramService.mockPublishedPrograms)
+        XCTAssertEqual(mockProgramService.mockPublishedPrograms.first, sut.program)
+    }
+    
+    @MainActor
+    func testPublishProgramFailure() async {
+        //Given
+        let expectation = XCTestExpectation(description: "Publish program should fail")
+        mockProgramService.shouldThrowError = true
+        sut.$alert
+            .dropFirst()
+            .sink { _ in
+                expectation.fulfill()
+            }
+            .store(in: &cancellables)
+        
+        //When
+        sut.publishProgram()
+        
+        //Then
+        await fulfillment(of: [expectation], timeout: 1)
+        XCTAssertEqual(sut.alert?.subtitle, "Try again")
     }
 }
